@@ -35,7 +35,7 @@ const JobAudit = () => {
         }}
       >
         <Typography level="h4" component="h3" sx={{flex: 1}}>
-          Generative AI Bots
+          Job Audit
         </Typography>
 
       </Box>
