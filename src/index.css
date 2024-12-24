@@ -4,13 +4,29 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body,
-#root {
-  @apply h-full w-full p-0 m-0;
-  font-family: "Radio Canada", sans-serif !important;
+body, html {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
 }
 
 #root {
+  height: 100%;
+  width: 100%;
+  display: flex;
   zoom: 0.88;
+  font-family: "Radio Canada", sans-serif !important;
+}
+/* css scrollbar style */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--variant-softBg, var(--joy-palette-neutral-softBg, var(--joy-palette-neutral-100, #F0F4F8)));
 }

@@ -1,6 +1,11 @@
-import { CssVarsProvider, extendTheme, selectClasses } from "@mui/joy";
+import { CssVarsProvider, extendTheme } from "@mui/joy";
 import AppRouter from "./core/router.jsx";
 import LoginModal from "./components/dialogs/login-modal.jsx";
+import {  ModuleRegistry, AllCommunityModule } from "ag-grid-community";
+import CssBaseline from "@mui/joy/CssBaseline";
+
+// Register all Community features
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 function App() {
   const theme = extendTheme({
@@ -67,6 +72,7 @@ function App() {
 
   return (
     <CssVarsProvider theme={theme}>
+      <CssBaseline />
       <LoginModal />
       <AppRouter />
     </CssVarsProvider>
