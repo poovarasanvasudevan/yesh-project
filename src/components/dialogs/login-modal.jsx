@@ -2,22 +2,18 @@ import {
   FormControl,
   FormLabel,
   Modal,
-  ModalClose,
-  ModalDialog,
   Stack,
   Input,
   Button,
-  DialogTitle,
   Select,
-  Option,
   Box,
-  Typography,
-} from "@mui/joy";
+  Typography, Dialog, MenuItem, TextField,
+} from "@mui/material";
 import { useLoginStore } from "../../core/states/login-store";
 import { Close, Lock } from "@mui/icons-material";
 import { useSetState } from "ahooks";
 
-const LoginModal = ({ open, onClose }) => {
+const LoginModal = () => {
   const { openLoginDialog, setOpenLoginDialog } = useLoginStore();
   const [state, setState] = useSetState({
     loading: false,
@@ -26,20 +22,19 @@ const LoginModal = ({ open, onClose }) => {
 
   const dpValues = Array.from({ length: 150 }, (_, i) => i + 1);
   return (
-    <Modal
-      open={openLoginDialog}
-      size="sm"
-      onClose={() => setOpenLoginDialog(false)}
-    >
-      <ModalDialog
+
+      <Dialog
+        open={openLoginDialog}
+        onClose={() => setOpenLoginDialog(false)}
         variant="plain"
-        sx={{ width: 420, z: 9999, p: 0, top: "12vh", left: "38%" }}
+        maxWidth={"md"}
         layout="top"
       >
         <Box
           spacing={1}
           color="primary"
           sx={{
+            width: 400,
             py: 1,
             px: 2,
             backgroundColor: "neutral.softBg",
@@ -63,30 +58,29 @@ const LoginModal = ({ open, onClose }) => {
         <form
           onSubmit={(event) => {
             event.preventDefault();
-            setOpen(false);
+            setOpenLoginDialog(false);
           }}
         >
           <Stack spacing={1.5} size="sm" sx={{ px: 3, pt: 1.5, pb: 1.5 }}>
-            <FormControl size="sm" required>
-              <FormLabel>Anthem ID</FormLabel>
-              <Input autoFocus required variant="soft" />
-            </FormControl>
+            <TextField id="outlined-basic" name={"anthemID"}
+                       inputProps={{
+                         autoComplete: 'off'
+                       }}
+                       autoComplete={"off"} label="Anthem ID" variant="outlined" size={"small"} />
+            <TextField id="outlined-basic" name={"password"}
+                       inputProps={{
+                         autoComplete: 'off'
+                       }}
+                       autoComplete={"off"} label="Password" type={"password"} variant="outlined" size={"small"} />
 
-            <FormControl size="sm" required>
-              <FormLabel>Password</FormLabel>
-              <Input required variant="soft" />
-            </FormControl>
-
-            <FormControl size="sm" required>
+            <FormControl size="small" required>
               <FormLabel>App Code</FormLabel>
-              <Select defaultValue="aedl" variant="soft">
+              <Select>
                 {dpValues.map((value) => (
-                  <Option key={value} value={value}>
-                    {value}
-                  </Option>
+                  <MenuItem  key={value} value={value}>{value}</MenuItem>
                 ))}
-                <Option value="aedl">AEDL</Option>
-                <Option value="edl">EDL</Option>
+                <MenuItem  value="aedl">AEDL</MenuItem >
+                <MenuItem  value="edl">EDL</MenuItem >
               </Select>
             </FormControl>
 
@@ -126,8 +120,7 @@ const LoginModal = ({ open, onClose }) => {
             </Stack>
           </Stack>
         </form>
-      </ModalDialog>
-    </Modal>
+      </Dialog>
   );
 };
 

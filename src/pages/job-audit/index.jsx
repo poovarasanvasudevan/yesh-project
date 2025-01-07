@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/joy";
+import { Box, Typography } from "@mui/material";
 import { DatatableComponent } from "../../components/table/DatatableComponent";
 
 const JobAudit = () => {
@@ -22,8 +22,7 @@ const JobAudit = () => {
 
   return (
     <>
-      <Box
-        sx={{
+      <Box sx={{
           display: "flex",
           mb: 1,
           mt: 2,
@@ -32,12 +31,8 @@ const JobAudit = () => {
           alignItems: {xs: "start", sm: "center"},
           flexWrap: "wrap",
           justifyContent: "space-between",
-        }}
-      >
-        <Typography level="h4" component="h3" sx={{flex: 1}}>
-          Job Audit
-        </Typography>
-
+        }}>
+        <Typography variant="h6" fontWeight={600} sx={{flex: 1}}>Job Audit</Typography>
       </Box>
       <Box
         sx={{

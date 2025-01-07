@@ -2,15 +2,14 @@ import { Refresh } from "@mui/icons-material";
 import {
   Box,
   Button,
-  CircularProgress,
-  IconButton,
   Tab,
   tabClasses,
-  TabList,
-  TabPanel,
-  Tabs,
   Typography,
-} from "@mui/joy";
+} from "@mui/material";
+
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 
 const OrchestratorAudit = () => {
   return (
@@ -33,12 +32,11 @@ const OrchestratorAudit = () => {
         sx={{
           flex: 1,
           display: "flex",
-          flex: 1,
         }}
       >
-        <Tabs
+        <TabContext
           aria-label="Basic tabs"
-          defaultValue={0}
+          value={0}
           sx={{ width: "100%", bgcolor: "transparent" }}
         >
           <TabList
@@ -63,7 +61,7 @@ const OrchestratorAudit = () => {
           <TabPanel value={1}>
             <b>Second</b> tab panel
           </TabPanel>
-        </Tabs>
+        </TabContext>
       </Box>
     </>
   );

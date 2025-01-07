@@ -1,11 +1,11 @@
-import GlobalStyles from "@mui/joy/GlobalStyles";
-import Sheet from "@mui/joy/Sheet";
-import IconButton from "@mui/joy/IconButton";
+import GlobalStyles from "@mui/material/GlobalStyles";
+import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Box } from "@mui/material";
 
 const Header = () => {
   return (
-    <Sheet
+    <Box
       sx={{
         display: { xs: "flex", md: "none" },
         alignItems: "center",
@@ -35,7 +35,7 @@ const Header = () => {
       <IconButton variant="outlined" color="neutral" size="sm">
         <MenuIcon />
       </IconButton>
-    </Sheet>
+    </Box>
   );
 };
 

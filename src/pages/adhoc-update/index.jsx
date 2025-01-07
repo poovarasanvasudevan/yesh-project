@@ -2,19 +2,17 @@ import {
   Alert,
   Box,
   Button,
-  CircularProgress,
   FormControl,
   FormLabel,
   IconButton,
   Input,
-  Option,
   Select,
   Stack,
-  Textarea,
-  Typography,
-} from "@mui/joy";
+  TextField,
+  Typography,MenuItem
+} from "@mui/material";
 import { useLoginStore } from "../../core/states/login-store";
-import { Add, Delete, Send } from "@mui/icons-material";
+import { Add, Delete } from "@mui/icons-material";
 import { useSetState } from "ahooks";
 
 const AdhocUpdate = () => {
@@ -64,16 +62,16 @@ const AdhocUpdate = () => {
               <FormControl size="sm" required>
                 <FormLabel sx={{ fontSize: 13 }}>Table Name</FormLabel>
                 <Select defaultValue="dev" variant="soft" sx={{ width: 280 }}>
-                  <Option value="dev">DEV</Option>
-                  <Option value="sit">SIT</Option>
-                  <Option value="uat">UAT</Option>
-                  <Option value="prod">PROD</Option>
+                  <MenuItem value="dev">DEV</MenuItem>
+                  <MenuItem value="sit">SIT</MenuItem>
+                  <MenuItem value="uat">UAT</MenuItem>
+                  <MenuItem value="prod">PROD</MenuItem>
                 </Select>
               </FormControl>
 
               <Stack direction={"column"} spacing={1} sx={{ pt: 2 }}>
                 {state.columns.map((column, index) => (
-                  <Stack direction={"row"} spacing={2}>
+                  <Stack direction={"row"} spacing={2} key={12}>
                     <FormControl size="sm" required>
                       <FormLabel sx={{ fontSize: 13 }}>Column Name</FormLabel>
                       <Select
@@ -81,18 +79,16 @@ const AdhocUpdate = () => {
                         variant="soft"
                         sx={{ width: 280 }}
                       >
-                        <Option value="dev">DEV</Option>
-                        <Option value="sit">SIT</Option>
-                        <Option value="uat">UAT</Option>
-                        <Option value="prod">PROD</Option>
+                        <MenuItem value="dev">DEV</MenuItem>
+                        <MenuItem value="sit">SIT</MenuItem>
+                        <MenuItem value="uat">UAT</MenuItem>
+                        <MenuItem value="prod">PROD</MenuItem>
                       </Select>
                     </FormControl>
-
                     <FormControl size="sm" required>
                       <FormLabel sx={{ fontSize: 13 }}>Column Name</FormLabel>
                       <Input variant="soft" sx={{ width: 280 }} />
                     </FormControl>
-
                     <Stack direction={"row"} sx={{ pt: 3.3 }} spacing={1}>
                       <IconButton
                         variant="soft"
@@ -122,8 +118,9 @@ const AdhocUpdate = () => {
 
               <FormControl size="sm" required>
                 <FormLabel sx={{ fontSize: 13 }}>Query</FormLabel>
-                <Textarea
+                <TextField
                   minRows={8}
+                  multiline
                   variant="soft"
                   sx={{ width: 680 }}
                   placeholder="Where aplctn_cd='ALL'"

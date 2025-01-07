@@ -1,7 +1,7 @@
 import { AgGridReact } from "ag-grid-react";
-import Box from "@mui/joy/Box";
+import Box from "@mui/material/Box";
 import { themeQuartz } from 'ag-grid-community'
-import { useTheme } from "@mui/joy";
+import { useTheme } from "@mui/material";
 import { useMemo } from "react";
 
 
@@ -12,7 +12,7 @@ export const DatatableComponent = ({ rows, columns }) => {
   const myTheme = useMemo(() => {
     return themeQuartz
       .withParams({
-        backgroundColor: theme.palette.background.body,
+        backgroundColor: theme.palette.background.default,
         borderColor: theme.palette.divider,
         borderRadius: 10,
 
@@ -25,17 +25,17 @@ export const DatatableComponent = ({ rows, columns }) => {
         fontFamily: "inherit",
         fontSize: 13,
         foregroundColor: theme.palette.text.primary,
-        headerBackgroundColor: theme.palette.background.level1,
-        headerFontSize: 13,
+        headerBackgroundColor: theme.palette.primary.main,
+        headerFontSize: 14,
         headerFontWeight: 600,
-        headerTextColor: theme.palette.text.primary,
+        headerTextColor: 'white',
         rowBorder: true,
         rowVerticalPaddingScale: 0.8,
         sidePanelBorder: true,
         spacing: 6,
         wrapperBorder: true,
-        wrapperBorderRadius: 10,
-        headerHeight: 32,
+        wrapperBorderRadius: 4,
+        headerHeight: 36,
       });
   },[ theme ])
 

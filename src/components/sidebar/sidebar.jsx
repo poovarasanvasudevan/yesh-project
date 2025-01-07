@@ -1,31 +1,31 @@
-import GlobalStyles from "@mui/joy/GlobalStyles";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import Divider from "@mui/joy/Divider";
-import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
-import ListItemButton, { listItemButtonClasses } from "@mui/joy/ListItemButton";
-import ListItemContent from "@mui/joy/ListItemContent";
-import Typography from "@mui/joy/Typography";
-import Sheet from "@mui/joy/Sheet";
+import GlobalStyles from "@mui/material/GlobalStyles";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton, { listItemButtonClasses } from "@mui/material/ListItemButton";
+import Typography from "@mui/material/Typography";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import React from "react";
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import logo from '../../assets/img/logo1.png';
-import ColorSchemeToggle from "./ColorSchemeToggle";
-import { Alert, FormControl, FormLabel, Option, Select, Stack } from "@mui/joy";
+import { Alert, FormControl, Select, Stack, MenuItem, ListItemText, InputLabel } from "@mui/material";
 import { useLoginStore } from "../../core/states/login-store";
 import { useNavigate } from "react-router-dom";
 
 function Toggler({defaultExpanded = true, renderToggle, children}) {
   const [open, setOpen] = React.useState(defaultExpanded);
   return (
-    <React.Fragment>
+    <Box sx={{display: 'flex', flexDirection: 'column',  width: '100%',}}>
       {renderToggle({open, setOpen})}
       <Box
         sx={[
           {
+            width: '100%',
+            padding: 0,
             display: "grid",
+            backgroundColor: "grey.100",
             transition: "0.2s ease",
             "& > *": {
               overflow: "hidden",
@@ -36,7 +36,7 @@ function Toggler({defaultExpanded = true, renderToggle, children}) {
       >
         {children}
       </Box>
-    </React.Fragment>
+    </Box>
   );
 }
 
@@ -74,7 +74,7 @@ export default function Sidebar() {
   };
 
   return (
-    <Sheet className="Sidebar" sx={{
+    <Box className="Sidebar" sx={{
       position: {xs: "fixed", md: "sticky"},
       transform: {
         xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))",
@@ -83,7 +83,7 @@ export default function Sidebar() {
       transition: "transform 0.4s, width 0.4s",
       zIndex: 100,
       height: "100%",
-      width: "250px",
+      width: "280px",
       top: 0,
       flexShrink: 0,
       display: "flex",
@@ -92,72 +92,66 @@ export default function Sidebar() {
       borderRight: "1px solid",
       borderColor: "divider",
     }}>
-      <GlobalStyles styles={(theme) => ({
-        ":root": {
-          "--Sidebar-width": "220px",
-          [theme.breakpoints.up("lg")]: {
-            "--Sidebar-width": "240px",
-          },
-        },
-      })}/>
-      <Box sx={{display: "flex", gap: 1, alignItems: "center", px: 2, pt: 1.5}}>
+      <Box sx={{display: "flex", gap: 1, alignItems: "center", px: 2, pt: 2}}>
         <img src={logo} width="25" height="25"/>
         <Box sx={{display: "flex", flexDirection: "column"}}>
-          <Typography level="title-sm" fontWeight={600}>
+          <Typography fontSize={18} fontWeight={600}>
             AEDL Support Portal.
           </Typography>
         </Box>
-        <ColorSchemeToggle sx={{ml: "auto"}}/>
       </Box>
 
-      <Stack direction={"column"} sx={{px: 2}} spacing={1}>
-        <FormControl size="sm">
-          <FormLabel>Environment</FormLabel>
-          <Select defaultValue="dev" variant="soft">
-            <Option value="dev">DEV</Option>
-            <Option value="sit">SIT</Option>
-            <Option value="uat">UAT</Option>
-            <Option value="prod">PROD</Option>
+      <Stack direction={"column"} sx={{px: 2 , pt: 2}} spacing={2}>
+        <FormControl fullWidth size={"small"}>
+          <InputLabel id="env-label">Select Environment</InputLabel>
+          <Select labelId="env-label" label="Select Environment">
+                <MenuItem value="dev">DEV</MenuItem>
+                <MenuItem value="sit">SIT</MenuItem>
+                <MenuItem value="uat">UAT</MenuItem>
+                <MenuItem value="prod">PROD</MenuItem>
           </Select>
         </FormControl>
-        <FormControl size="sm">
-          <FormLabel>App Code</FormLabel>
-          <Select defaultValue="dev" variant="soft">
-            <Option value="dev">DEV</Option>
-            <Option value="sit">SIT</Option>
-            <Option value="uat">UAT</Option>
-            <Option value="prod">PROD</Option>
+        <FormControl fullWidth size={"small"}>
+          <InputLabel id="appcode-label">App Code</InputLabel>
+          <Select labelId="appcode-label" label="AppCode">
+            <MenuItem value="dev">DEV</MenuItem>
+            <MenuItem value="sit">SIT</MenuItem>
+            <MenuItem value="uat">UAT</MenuItem>
+            <MenuItem value="prod">PROD</MenuItem>
           </Select>
         </FormControl>
       </Stack>
 
       <Box sx={{
-        minHeight: 0, overflow: "hidden auto", flexGrow: 1, px: 1.5, display: "flex", flexDirection: "column",
+        minHeight: 0,
+        overflow: "hidden auto",
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
         [`& .${listItemButtonClasses.root}`]: {
           gap: 1,
         },
+        px: 0,
       }}>
         <List
           size="sm"
           sx={{
             gap: 0.2,
             "--List-nestedInsetStart": "30px",
-            "--ListItem-radius": (theme) => theme.vars.radius.sm,
           }}
         >
           {MENUS_FULL.map((item) => {
             if (item.children) {
               return (
-                <ListItem nested key={item.label}>
-                  <Toggler
-                    renderToggle={({open, setOpen}) => (
-                      <ListItemButton onClick={() => setOpen(!open)}>
+                <ListItem nested key={item.label} disablePadding>
+                  <Toggler renderToggle={({open, setOpen}) => (
+                      <ListItemButton  onClick={() => setOpen(!open)}>
                         <AssignmentRoundedIcon/>
-                        <ListItemContent>
-                          <Typography level="title-sm" fontSize={13}>
+                        <ListItemText >
+                          <Typography level="title-sm" fontSize={14} fontWeight={600}>
                             {item.label}
                           </Typography>
-                        </ListItemContent>
+                        </ListItemText >
                         <KeyboardArrowDownIcon
                           sx={[
                             open
@@ -168,14 +162,13 @@ export default function Sidebar() {
                       </ListItemButton>
                     )}
                   >
-                    <List sx={{gap: 0.5}}>
-                      {item.children.map((child, index) => (
-                        <ListItem key={child.label}>
-                          <ListItemButton
-                            onClick={() => onClickMenu(child)}
-                            fontSize={13}
-                          >
-                            {child.label}
+                    <List sx={{ p: 0}}>
+                      {item.children.map((child) => (
+                        <ListItem key={child.label} disablePadding>
+                          <ListItemButton onClick={() => onClickMenu(child)} fontSize={12}>
+                            <ListItemText sx={{pl: 4}}>
+                              <Typography level="title-sm" fontSize={14}>{child.label}</Typography>
+                            </ListItemText>
                           </ListItemButton>
                         </ListItem>
                       ))}
@@ -185,34 +178,37 @@ export default function Sidebar() {
               );
             } else {
               return (
-                <ListItem key={item.label}>
+                <ListItem key={item.label} disablePadding>
                   <ListItemButton
                     onClick={() => onClickMenu(item)}
                   >
                     {item.icon}
-                    <ListItemContent>
-                      <Typography level="title-sm" fontSize={13}>
+                    <ListItemText>
+                      <Typography level="title-sm" fontSize={14}>
                         {item.label}
                       </Typography>
-                    </ListItemContent>
+                    </ListItemText>
                   </ListItemButton>
                 </ListItem>
               );
             }
           })}
         </List>
-        {!isLoggedIn && (
-          <Alert sx={{mx: 2}} variant="soft" size="sm" color="warning">
-            You are in read-only mode, <br/> Login to edit records
-          </Alert>
-        )}
+
 
       </Box>
+
+      {!isLoggedIn && (
+        <Alert sx={{mx: 2}} variant="soft" size="sm" color="warning">
+          You are in read-only mode, <br/> Login to edit records
+        </Alert>
+      )}
       <Divider/>
 
       <Box sx={{display: "flex", gap: 1, alignItems: "center", pb: 1.5, px: 1.5}}>
         <Button
-          variant="soft"
+          variant="contained"
+          disableElevation
           sx={{width: "100%"}}
           color="primary"
           onClick={() => setOpenLoginDialog(true)}
@@ -220,6 +216,6 @@ export default function Sidebar() {
           Login
         </Button>
       </Box>
-    </Sheet>
+    </Box>
   )
 }
