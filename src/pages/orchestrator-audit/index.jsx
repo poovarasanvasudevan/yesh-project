@@ -1,68 +1,31 @@
-import { Refresh } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Tab,
-  tabClasses,
-  Typography,
-} from "@mui/material";
-
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
+import { IoIosRefresh } from "react-icons/io";
+import {  Tabs, Button } from "flowbite-react";
 
 const OrchestratorAudit = () => {
   return (
     <>
-      <Typography level="h4" component="h1">
-        Orchestrator Scheduler Audit
-      </Typography>
+      <div className={'flex p-4'}>
+        <div className={'flex-1'}>
+          <h3> Orchestrator Scheduler Audit</h3>
+        </div>
 
-      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}></Box>
-      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
-        <Button variant="soft" size="sm">
-          Load More
-        </Button>
-        <Button variant="soft" size="sm" startDecorator={<Refresh />}>
-          Refresh
-        </Button>
-      </Box>
+        <div className={'flex flex-end gap-1'}>
+          <Button color="blue" size="xs">
+            Load More
+          </Button>
+          <Button color="blue" size="xs">
+            Refresh
+            <IoIosRefresh />
+          </Button>
+        </div>
+      </div>
 
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-        }}
-      >
-        <TabContext
-          aria-label="Basic tabs"
-          value={0}
-          sx={{ width: "100%", bgcolor: "transparent" }}
-        >
-          <TabList
-            variant="soft"
-            disableUnderline
-            tabFlex="auto"
-            sx={{
-              gap: 1,
-              bgcolor: "background.level1",
-              fontSize: 14,
-              [`& .${tabClasses.root}[aria-selected="true"]`]: {
-                bgcolor: "transparent",
-              },
-            }}
-          >
-            <Tab>Orchestrator Audit</Tab>
-            <Tab>Batch Orchestrator Audit</Tab>
-          </TabList>
-          <TabPanel value={0}>
-            <b>First</b> tab panel
-          </TabPanel>
-          <TabPanel value={1}>
-            <b>Second</b> tab panel
-          </TabPanel>
-        </TabContext>
-      </Box>
+      <div className={'flex-1 flex'} >
+        <Tabs  aria-label="Default tabs"  variant="underline">
+          <Tabs.Item title={'Orchestrator Audit'}><b>First</b> tab panel</Tabs.Item>
+          <Tabs.Item title={'Batch Orchestrator Audit'}><b>First</b> tab panel</Tabs.Item>
+        </Tabs>
+      </div>
     </>
   );
 };

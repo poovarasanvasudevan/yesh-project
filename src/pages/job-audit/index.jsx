@@ -1,4 +1,3 @@
-import { Box, Typography } from "@mui/material";
 import { DatatableComponent } from "../../components/table/DatatableComponent";
 
 const JobAudit = () => {
@@ -22,28 +21,12 @@ const JobAudit = () => {
 
   return (
     <>
-      <Box sx={{
-          display: "flex",
-          mb: 1,
-          mt: 2,
-          gap: 1,
-          flexDirection: {xs: "column", sm: "row"},
-          alignItems: {xs: "start", sm: "center"},
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-        }}>
-        <Typography variant="h6" fontWeight={600} sx={{flex: 1}}>Job Audit</Typography>
-      </Box>
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          width: "100%",
-          overflowY: "auto",
-        }}
-      >
+      <div className={'flex mb-1 mt-2 gap-2 flex-col align-center flex-wrap justify-between'}>
+        <h6 className='flex-1'>Job Audit</h6>
+      </div>
+      <div className={'flex-1 flex w-[100%] overflow-y-auto'}>
         <DatatableComponent  rows={rows} columns={columns}/>
-      </Box>
+      </div>
     </>
   );
 };

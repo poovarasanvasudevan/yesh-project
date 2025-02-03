@@ -1,19 +1,7 @@
-import {
-  Alert,
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  IconButton,
-  Input,
-  Select,
-  Stack,
-  TextField,
-  Typography,MenuItem
-} from "@mui/material";
 import { useLoginStore } from "../../core/states/login-store";
-import { Add, Delete } from "@mui/icons-material";
 import { useSetState } from "ahooks";
+import { Alert , Label, Select, TextInput, Button, Textarea } from "flowbite-react";
+import { IoIosAdd, IoIosTrash } from "react-icons/io";
 
 const AdhocUpdate = () => {
   const { isLoggedIn } = useLoginStore();
@@ -41,125 +29,116 @@ const AdhocUpdate = () => {
     });
   };
 
+
+  const FormControlItem = ({ label, children, id }) => {
+    return (
+      <div>
+        <div className="mb-2 block">
+          <Label htmlFor={id} value={label} />
+        </div>
+        {children}
+      </div>
+    )
+  }
+
   return (
     <>
-      <Typography level="h4" component="h1">
+      <h4>
         Ad-hoc Updates
-      </Typography>
+      </h4>
 
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          height: "100%",
-        }}
-      >
+      <div className={'flex-1 flex h-[100%]'}>
         {isLoggedIn ? (
           <Alert color="warning">Login to Perform Updates</Alert>
         ) : (
-          <Stack direction={"row"} sx={{ pt: 4 }} spacing={8}>
-            <Stack direction={"column"} spacing={1} sx={{ width: 700 }}>
-              <FormControl size="sm" required>
-                <FormLabel sx={{ fontSize: 13 }}>Table Name</FormLabel>
-                <Select defaultValue="dev" variant="soft" sx={{ width: 280 }}>
-                  <MenuItem value="dev">DEV</MenuItem>
-                  <MenuItem value="sit">SIT</MenuItem>
-                  <MenuItem value="uat">UAT</MenuItem>
-                  <MenuItem value="prod">PROD</MenuItem>
-                </Select>
-              </FormControl>
+          <div className={'flex px-4 gap-8'}>
+            <div className={'flex flex-col gap-1 w-[700px]'}>
 
-              <Stack direction={"column"} spacing={1} sx={{ pt: 2 }}>
+              <FormControlItem label="Table Name" id="table-name">
+                <Select id="table-name" required>
+                  <option value={'dev'}>DEV</option>
+                  <option value={'sit'}>SIT</option>
+                  <option value={'uat'}>UAT</option>
+                  <option value={'prod'}>PROD</option>
+                </Select>
+              </FormControlItem>
+
+              <div className={'flex flex-col gap-1 pt-2'}>
                 {state.columns.map((column, index) => (
-                  <Stack direction={"row"} spacing={2} key={12}>
-                    <FormControl size="sm" required>
-                      <FormLabel sx={{ fontSize: 13 }}>Column Name</FormLabel>
-                      <Select
-                        defaultValue="dev"
-                        variant="soft"
-                        sx={{ width: 280 }}
-                      >
-                        <MenuItem value="dev">DEV</MenuItem>
-                        <MenuItem value="sit">SIT</MenuItem>
-                        <MenuItem value="uat">UAT</MenuItem>
-                        <MenuItem value="prod">PROD</MenuItem>
+                  <div className={'flex flex-row gap-2'} key={'x' + index}>
+
+                    <FormControlItem label="Column Name" id="column-name">
+                      <Select id="table-name" required>
+                        <option value={'dev'}>DEV</option>
+                        <option value={'sit'}>SIT</option>
+                        <option value={'uat'}>UAT</option>
+                        <option value={'prod'}>PROD</option>
                       </Select>
-                    </FormControl>
-                    <FormControl size="sm" required>
-                      <FormLabel sx={{ fontSize: 13 }}>Column Name</FormLabel>
-                      <Input variant="soft" sx={{ width: 280 }} />
-                    </FormControl>
-                    <Stack direction={"row"} sx={{ pt: 3.3 }} spacing={1}>
-                      <IconButton
+                    </FormControlItem>
+
+                    <FormControlItem label={'Column Name'} id={'column-name'}>
+                      <TextInput id={'column-name'} required />
+                    </FormControlItem>
+
+
+
+                    <div className={'flex pt-3 gap-1'} >
+                      <Button
                         variant="soft"
                         color="primary"
                         size="sm"
                         sx={{ height: 32 }}
                         onClick={onAddColumn}
                       >
-                        <Add />
-                      </IconButton>
+                        <IoIosAdd />
+                      </Button>
 
                       {index > 0 && (
-                        <IconButton
+                        <Button
                           variant="soft"
                           size="sm"
                           color="danger"
                           onClick={() => onDeleteColumn(index)}
                           sx={{ height: 32 }}
                         >
-                          <Delete />
-                        </IconButton>
+                          <IoIosTrash />
+                        </Button>
                       )}
-                    </Stack>
-                  </Stack>
+                    </div>
+                  </div>
                 ))}
-              </Stack>
+              </div>
 
-              <FormControl size="sm" required>
-                <FormLabel sx={{ fontSize: 13 }}>Query</FormLabel>
-                <TextField
-                  minRows={8}
-                  multiline
-                  variant="soft"
-                  sx={{ width: 680 }}
-                  placeholder="Where aplctn_cd='ALL'"
-                />
-              </FormControl>
+              <FormControlItem label="Query" id="Query">
+                  <Textarea id="Query" required  placeholder="Where aplctn_cd='ALL'" className={'w-[680px]'} />
+              </FormControlItem>
 
-              <Stack direction={"row"} spacing={2}>
+              <div>
                 <Button variant="solid" color="primary" size="sm">
                   Submit
                 </Button>
-              </Stack>
-            </Stack>
-            <Stack direction={"column"} spacing={2} sx={{ width: 350 }}>
-              <Box
-                sx={{
-                  backgroundColor: "warning.softBg",
-                  px: 3,
-                  py: 2,
-                  borderRadius: 8,
-                }}
-              >
+              </div>
+            </div>
+            <div className={'flex flex-col gap-2 w-[350px]'}>
+              <div className={'px-2 py-2 rounded'}>
                 <ul>
                   <li>
-                    <Typography level="body-xs">
+                    <div >
                       <b>Disclaimer:</b> Update command will be formed as is
                       provided by User
-                    </Typography>
+                    </div>
                   </li>
                   <li>
-                    <Typography level="body-xs">
+                    <div>
                       <b> *</b> Wrap column value with (') single quote
-                    </Typography>
+                    </div>
                   </li>
                 </ul>
-              </Box>
-            </Stack>
-          </Stack>
+              </div>
+            </div>
+          </div>
         )}
-      </Box>
+      </div>
     </>
   );
 };

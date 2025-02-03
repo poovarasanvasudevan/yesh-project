@@ -1,5 +1,4 @@
 import { AgGridReact } from "ag-grid-react";
-import Box from "@mui/material/Box";
 import { themeQuartz } from 'ag-grid-community'
 import { useTheme } from "@mui/material";
 import { useMemo } from "react";
@@ -40,19 +39,13 @@ export const DatatableComponent = ({ rows, columns }) => {
   },[ theme ])
 
   return (
-    <Box sx={{width: '100%', pb: 2}}>
-    <AgGridReact
-      rowData={rows}
-      pagination={true}
-      theme={myTheme}
-      columnDefs={columns}
-    />
-    </Box>
-    // <DataGrid
-    //   columns={columns}
-    //   rows={rows}
-    //   className="w-full"
-    //   style={{ resize: "both", blockSize: "100%" }}
-    // />
+    <div className={'w-full pb-2'}>
+      <AgGridReact
+        rowData={rows}
+        pagination={true}
+        theme={myTheme}
+        columnDefs={columns}
+      />
+    </div>
   );
 };
