@@ -31,7 +31,19 @@ const LoginModal = ( { name }) => {
   const dpValues = Array.from({ length: 150 }, (_, i) => i + 1);
 
 
-  const validate = () => {}
+  const validate = () => {
+    if(!state.username || state.username === '') {
+      setState({validationError: {username: "Username is required"}});
+      return false;
+    }
+
+    if(!state.password || state.password === '') {
+      setState({validationError: {password: "Password is required"}});
+      return false;
+    }
+
+    return true;
+  }
 
   const onClickSubmit = () => {
     setState({loading: true, btnText: "Validating..."});
@@ -112,7 +124,7 @@ const LoginModal = ( { name }) => {
 
         <div className={'flex space-x-2'}>
           <div className={'flex-1'}></div>
-          <Button color="blue" size="xs" className={'mt-4'}>{state.btnText}</Button>
+          <Button color="blue" size="xs" className={'mt-4'} onClick={onClickSubmit}>{state.btnText}</Button>
           <Button color="failure" size="xs" className={'mt-4'} onClick={() => close(name)}>Cancel</Button>
         </div>
       </div>
