@@ -79,10 +79,11 @@ export default function AppSidebar() {
 
 
   const loadDefaultAppCodes = () => {
-    fetch(getBaseURL(env) + `getjobportalparams?env=${env}&dropDownCol=application`)
+    fetch(getBaseURL(env) + `getjobportalparms?env=${env}&dropDownCol=application`)
       .then(res => res.json())
       .then((result) => {
-        setState({defaultAppCodes: result.app_cd})
+        const codes = ['ALL', ...result.application]
+        setState({defaultAppCodes: codes})
       })
   }
 
