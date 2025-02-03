@@ -1,9 +1,9 @@
-import React from "react";
 import logo from '../../assets/img/logo1.png';
 import { useLoginStore } from "../../core/states/login-store";
 import { useNavigate } from "react-router-dom";
-import { Sidebar } from "flowbite-react";
+import { Alert, Select, Sidebar } from "flowbite-react";
 import { MdOutlineAssignment } from "react-icons/md";
+import { FormControlItem } from "../form/control.jsx";
 
 
 export default function AppSidebar() {
@@ -38,6 +38,13 @@ export default function AppSidebar() {
   const onClickMenu = (menu) => {
     if (menu.href) navigate(menu.href);
   };
+
+  const customThemeSidebar = {
+    root: {
+      inner: "h-full overflow-y-auto overflow-x-hidden rounded bg-gray-50 px-3 py-4 dark:bg-gray-800 flex flex-col",
+    },
+  };
+
 
   return (
     // <>
@@ -187,15 +194,41 @@ export default function AppSidebar() {
     //   </>
 
 
-    <Sidebar aria-label="Sidebar with multi-level dropdown example">
-      <Sidebar.Items>
+    <Sidebar className={'w-[280px] flex flex-col h-[100%]'} theme={customThemeSidebar}>
+      <Sidebar.Logo href="#" img={logo} imgAlt="logo">
+        AEDL Support Portal.
+      </Sidebar.Logo>
+
+      <div className={'px-2 gap-2 flex flex-col'}>
+        <FormControlItem label={'Select Environment'} id={'env'}>
+          <Select id={'env'} required size={'xs'}>
+            <option value={'dev'}>DEV</option>
+            <option value={'sit'}>SIT</option>
+            <option value={'uat'}>UAT</option>
+            <option value={'prod'}>PROD</option>
+          </Select>
+        </FormControlItem>
+
+        <FormControlItem label={'App Code'} id={'appcode'}>
+          <Select id={'env'} required>
+            <option value={'dev'}>DEV</option>
+            <option value={'sit'}>SIT</option>
+            <option value={'uat'}>UAT</option>
+            <option value={'prod'}>PROD</option>
+          </Select>
+        </FormControlItem>
+      </div>
+      <Sidebar.Items className={'pt-4 flex-1'}>
         <Sidebar.ItemGroup>
           {MENUS_FULL.map((item) => {
             if (item.children) {
               return (
-                <Sidebar.Collapse key={item.label} icon={MdOutlineAssignment} label={item.label}>
+                <Sidebar.Collapse
+                  open={true} key={item.label}
+                  label={item.label}
+                  icon={() => <MdOutlineAssignment/>}>
                   {item.children.map((child) => (
-                    <Sidebar.Item key={child.label} href={child.href}>
+                    <Sidebar.Item key={child.label} href={child.href} className={'text-[14px]'}>
                       {child.label}
                     </Sidebar.Item>
                   ))}
@@ -211,6 +244,12 @@ export default function AppSidebar() {
           })}
         </Sidebar.ItemGroup>
       </Sidebar.Items>
+
+      {!isLoggedIn && (
+        <Alert sx={{mx: 2}} variant="soft" size="sm" color="warning">
+          You are in read-only mode, <br/> Login to edit records
+        </Alert>
+      )}
     </Sidebar>
   )
 }

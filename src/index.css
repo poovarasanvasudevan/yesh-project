@@ -15,7 +15,7 @@ body, html {
   height: 100%;
   width: 100%;
   display: flex;
-  zoom: 0.88;
+  zoom: 0.8;
   font-family: "Radio Canada", sans-serif !important;
 }
 /* css scrollbar style */
