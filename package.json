@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@fontsource/radio-canada": "^5.1.0",
+    "@saimin/react-modal-manager": "^1.0.9",
     "ag-grid-community": "^33.0.3",
     "ag-grid-react": "^33.0.3",
     "ahooks": "^3.8.4",

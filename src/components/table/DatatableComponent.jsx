@@ -1,18 +1,15 @@
 import { AgGridReact } from "ag-grid-react";
 import { themeQuartz } from 'ag-grid-community'
-import { useTheme } from "@mui/material";
 import { useMemo } from "react";
 
 
 
 export const DatatableComponent = ({ rows, columns }) => {
 
-  const theme = useTheme();
+
   const myTheme = useMemo(() => {
     return themeQuartz
       .withParams({
-        backgroundColor: theme.palette.background.default,
-        borderColor: theme.palette.divider,
         borderRadius: 10,
 
         browserColorScheme: "light",
@@ -23,11 +20,9 @@ export const DatatableComponent = ({ rows, columns }) => {
         columnBorder: false,
         fontFamily: "inherit",
         fontSize: 13,
-        foregroundColor: theme.palette.text.primary,
-        headerBackgroundColor: theme.palette.primary.main,
         headerFontSize: 14,
         headerFontWeight: 600,
-        headerTextColor: 'white',
+        headerTextColor: 'black',
         rowBorder: true,
         rowVerticalPaddingScale: 0.8,
         sidePanelBorder: true,
@@ -36,7 +31,7 @@ export const DatatableComponent = ({ rows, columns }) => {
         wrapperBorderRadius: 4,
         headerHeight: 36,
       });
-  },[ theme ])
+  },[ ])
 
   return (
     <div className={'w-full pb-2'}>

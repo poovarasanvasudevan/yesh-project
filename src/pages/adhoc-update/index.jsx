@@ -1,7 +1,8 @@
 import { useLoginStore } from "../../core/states/login-store";
 import { useSetState } from "ahooks";
-import { Alert , Label, Select, TextInput, Button, Textarea } from "flowbite-react";
+import { Alert , Select, TextInput, Button, Textarea } from "flowbite-react";
 import { IoIosAdd, IoIosTrash } from "react-icons/io";
+import { FormControlItem } from "../../components/form/control.jsx";
 
 const AdhocUpdate = () => {
   const { isLoggedIn } = useLoginStore();
@@ -30,22 +31,11 @@ const AdhocUpdate = () => {
   };
 
 
-  const FormControlItem = ({ label, children, id }) => {
-    return (
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor={id} value={label} />
-        </div>
-        {children}
-      </div>
-    )
-  }
-
   return (
     <>
-      <h4>
-        Ad-hoc Updates
-      </h4>
+      <div className={'p-4'}>
+        <div className={'font-semibold text-[20px]'}>Ad-hoc Updates</div>
+      </div>
 
       <div className={'flex-1 flex h-[100%]'}>
         {isLoggedIn ? (
@@ -55,7 +45,7 @@ const AdhocUpdate = () => {
             <div className={'flex flex-col gap-1 w-[700px]'}>
 
               <FormControlItem label="Table Name" id="table-name">
-                <Select id="table-name" required>
+                <Select id="table-name" required sizing={'sm'}>
                   <option value={'dev'}>DEV</option>
                   <option value={'sit'}>SIT</option>
                   <option value={'uat'}>UAT</option>
@@ -68,7 +58,7 @@ const AdhocUpdate = () => {
                   <div className={'flex flex-row gap-2'} key={'x' + index}>
 
                     <FormControlItem label="Column Name" id="column-name">
-                      <Select id="table-name" required>
+                      <Select id="table-name" required sizing={'sm'} className={'w-[200px]'}>
                         <option value={'dev'}>DEV</option>
                         <option value={'sit'}>SIT</option>
                         <option value={'uat'}>UAT</option>
@@ -77,31 +67,23 @@ const AdhocUpdate = () => {
                     </FormControlItem>
 
                     <FormControlItem label={'Column Name'} id={'column-name'}>
-                      <TextInput id={'column-name'} required />
+                      <TextInput id={'column-name'} required sizing={'sm'} className={'w-[300px]'} />
                     </FormControlItem>
 
 
 
-                    <div className={'flex pt-3 gap-1'} >
-                      <Button
-                        variant="soft"
-                        color="primary"
-                        size="sm"
-                        sx={{ height: 32 }}
-                        onClick={onAddColumn}
-                      >
-                        <IoIosAdd />
+                    <div className={'flex pt-3 gap-1 items-end'} >
+                      <Button size="xs" onClick={onAddColumn}>
+                        <IoIosAdd size={20} />
                       </Button>
 
                       {index > 0 && (
                         <Button
-                          variant="soft"
-                          size="sm"
-                          color="danger"
+                          size="xs"
+                          color="failure"
                           onClick={() => onDeleteColumn(index)}
-                          sx={{ height: 32 }}
                         >
-                          <IoIosTrash />
+                          <IoIosTrash  size={20} />
                         </Button>
                       )}
                     </div>
@@ -109,12 +91,12 @@ const AdhocUpdate = () => {
                 ))}
               </div>
 
-              <FormControlItem label="Query" id="Query">
-                  <Textarea id="Query" required  placeholder="Where aplctn_cd='ALL'" className={'w-[680px]'} />
+              <FormControlItem label="Query" id="Query" className={'mt-2'}>
+                  <Textarea id="Query" required rows={8} placeholder="Where aplctn_cd='ALL'" className={'w-full'} />
               </FormControlItem>
 
-              <div>
-                <Button variant="solid" color="primary" size="sm">
+              <div className={'mt-3'}>
+                <Button  size="xs">
                   Submit
                 </Button>
               </div>
@@ -123,13 +105,13 @@ const AdhocUpdate = () => {
               <div className={'px-2 py-2 rounded'}>
                 <ul>
                   <li>
-                    <div >
+                    <div className={'text-[15px]'}>
                       <b>Disclaimer:</b> Update command will be formed as is
                       provided by User
                     </div>
                   </li>
                   <li>
-                    <div>
+                    <div className={'text-gray-500 text-[15px]'}>
                       <b> *</b> Wrap column value with (') single quote
                     </div>
                   </li>

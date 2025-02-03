@@ -23,9 +23,9 @@ const AdhocSupport = () => {
     <>
 
 
-      <div className={'flex p-4'}>
+      <div className={'flex p-4 items-center'}>
         <div className={'flex-1'}>
-        <h3>Orchestrator Scheduler Audit</h3>
+          <h3 className={'font-semibold text-[18px]'}> Adhoc Support</h3>
         </div>
 
         <div className={'flex flex-end gap-1'}>
@@ -33,21 +33,21 @@ const AdhocSupport = () => {
             Load More
           </Button>
           <Button color="blue" size="xs">
-            Refresh
+            Refresh &nbsp;
             <IoIosRefresh />
           </Button>
 
-          <Dropdown  size="xs" label="Dropdown button" dismissOnClick={false}>
+          <Dropdown size="xs" label="Dropdown button" dismissOnClick={true} className={'adhoc-support-action'}>
             <Dropdown.Item>Force Run</Dropdown.Item>
             <Dropdown.Item>Unload</Dropdown.Item>
             <Dropdown.Item>Active</Dropdown.Item>
-            <Dropdown.Item>I Active</Dropdown.Item>
+            <Dropdown.Item>In Active</Dropdown.Item>
           </Dropdown>
         </div>
       </div>
 
-      <div className={'flex-1 flex'} >
-        <Tabs  aria-label="Default tabs"  variant="underline">
+      <div className={'flex-1 flex w-full'} >
+        <Tabs  aria-label="Default tabs"  variant="underline" className={'w-full'}>
           <Tabs.Item title={'Job Metadata'}><b>First</b> tab panel</Tabs.Item>
           <Tabs.Item title={'Step Metadata'}><b>First</b> tab panel</Tabs.Item>
           <Tabs.Item title={'Orchestrator Metadata'}><b>First</b> tab panel</Tabs.Item>
