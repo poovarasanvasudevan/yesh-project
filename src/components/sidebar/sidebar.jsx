@@ -10,8 +10,8 @@ import { useEnv } from "../../core/states/env-store.jsx";
 
 
 export default function AppSidebar() {
-  const {isLoggedIn, setLogout, appCodes} = useLoginStore();
-  const { appCode, setAppCode} = useEnv();
+  const {isLoggedIn, setLogout, appCodes, accessibleEnv} = useLoginStore();
+  const { appCode, setAppCode, setEnv, env} = useEnv();
   const { open } = useModal();
 
 
@@ -76,9 +76,13 @@ export default function AppSidebar() {
 
       <div className={'px-2 gap-2 flex flex-col'}>
         <FormControlItem label={'Select Environment'} id={'env'}>
-          <Select id={'env'} required sizing={'sm'}>
-            {preEnv.map((val) => (
+          <Select id={'env'} required sizing={'sm'} onChange={(e) =>  setEnv(e.target.value)} value={env}>
+            {appCode ==='' && preEnv.map((val) => (
               <option value={val.value} key={val.value}>{val.label}</option>
+            ))}
+
+            {appCode !=='' && accessibleEnv[appCode].map((val) => (
+              <option value={val} key={val}>{val}</option>
             ))}
           </Select>
         </FormControlItem>
