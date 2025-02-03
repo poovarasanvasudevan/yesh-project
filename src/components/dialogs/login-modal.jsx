@@ -88,7 +88,7 @@ const LoginModal = ( { name }) => {
               appCode:  result.app_cd,
               loading: false,
               loginAppCode: result.app_cd.length === 1 ? result.app_cd[0] : '',
-              accessibleEnv: result.assessible_environment,
+              accessibleEnv: result.accessible_environments,
               btnText: "Login"
             })
 
