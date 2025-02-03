@@ -7,6 +7,9 @@ import { FormControlItem } from "../form/control.jsx";
 import { useModal } from "@saimin/react-modal-manager";
 import LoginModal from "../dialogs/login-modal.jsx";
 import { useEnv } from "../../core/states/env-store.jsx";
+import { getBaseURL } from "../../core/api/api-values.jsx";
+import { useSetState } from "ahooks";
+import { useEffect } from "react";
 
 
 export default function AppSidebar() {
@@ -14,6 +17,9 @@ export default function AppSidebar() {
   const { appCode, setAppCode, setEnv, env} = useEnv();
   const { open } = useModal();
 
+  const [state,setState]=  useSetState({
+    defaultAppCodes : []
+  })
 
   const preEnv = [
     {label: "DEV", value: "dev"},
@@ -67,6 +73,18 @@ export default function AppSidebar() {
     setLogout()
   }
 
+  useEffect(() => {
+    loadDefaultAppCodes();
+  }, []);
+
+
+  const loadDefaultAppCodes = () => {
+    fetch(getBaseURL(env) + `getjobportalparams?env=${env}&dropDownCol=application`)
+      .then(res => res.json())
+      .then((result) => {
+        setState({defaultAppCodes: result.app_cd})
+      })
+  }
 
   return (
     <Sidebar className={'w-[280px] flex flex-col h-[100%]'} theme={customThemeSidebar}>
@@ -77,19 +95,19 @@ export default function AppSidebar() {
       <div className={'px-2 gap-2 flex flex-col'}>
         <FormControlItem label={'Select Environment'} id={'env'}>
           <Select id={'env'} required sizing={'sm'} onChange={(e) =>  setEnv(e.target.value)} value={env}>
-            {appCode ==='' && preEnv.map((val) => (
-              <option value={val.value} key={val.value}>{val.label}</option>
-            ))}
-
-            {appCode !=='' && accessibleEnv[appCode].map((val) => (
+            {accessibleEnv[appCode] !== undefined  ? accessibleEnv[appCode].map((val) => (
               <option value={val} key={val}>{val}</option>
+            )) : preEnv.map((val) => (
+              <option value={val.value} key={val.value}>{val.label}</option>
             ))}
           </Select>
         </FormControlItem>
 
         <FormControlItem label={'App Code'} id={'appcode'}>
           <Select id={'env'} required sizing={'sm'} value={appCode} onChange={(e) =>  setAppCode(e.target.value)}>
-            {appCodes.map((val) => (
+            {appCodes.length !==0 ?appCodes.map((val) => (
+              <option value={val} key={val}>{val}</option>
+            )) : state.defaultAppCodes.map((val) => (
               <option value={val} key={val}>{val}</option>
             ))}
           </Select>

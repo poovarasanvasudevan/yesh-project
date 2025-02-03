@@ -29,9 +29,6 @@ const LoginModal = ( { name }) => {
 
   const { close } = useModal()
 
-  const dpValues = Array.from({ length: 150 }, (_, i) => i + 1);
-
-
   const validate = () => {
     if(!state.username || state.username === '') {
       setState({validationError: {username: "Username is required"}});
@@ -83,7 +80,7 @@ const LoginModal = ( { name }) => {
           if(result.anthemID) {
             setIsLoggedIn(true, result.anthemID);
             setAppCodes(result.app_cd)
-            setAccessibleEnv(result.assessible_environment);
+            setAccessibleEnv(result.accessible_environments);
             setState({
               appCode:  result.app_cd,
               loading: false,
