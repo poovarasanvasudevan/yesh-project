@@ -6,6 +6,7 @@ import { BiLock } from "react-icons/bi";
 import { useModal } from "@saimin/react-modal-manager";
 import { getBaseURL } from "../../core/api/api-values.jsx";
 import { useEnv } from "../../core/states/env-store.jsx";
+import error from "eslint-plugin-react/lib/util/error.js";
 
 const LoginModal = ( { name }) => {
   const { setIsLoggedIn, setUserRoles , setLoSupportedApps, setAccessibleEnv, setAppCodes, appCodes} = useLoginStore();
@@ -98,6 +99,13 @@ const LoginModal = ( { name }) => {
            })
           }
         })
+        .catch((error) => {
+          setState({
+            error: "Invalid Username or Password",
+            loading: false,
+            btnText: "Validate"
+          })
+        });
     } else if(appCodes.length > 0 && appCodeValidate()) {
       close(name);
     }
@@ -123,9 +131,13 @@ const LoginModal = ( { name }) => {
           })} sizing={'sm'} />
         </FormControlItem>
 
+        {state.error && (
+          <div className={'text-red-500 text-sm'}>{state.error}</div>
+        )}
+
 
         {appCodes.length > 1 && (
-          <FormControlItem label="App Code" id="app-code">
+          <FormControlItem label="App Code" id="app-code" error={state.validationError.appCode}>
             <Select id="app-code" sizing={'sm'} onChange={(e) =>  {
                 setAppCode(e.target.value);
             }}>
