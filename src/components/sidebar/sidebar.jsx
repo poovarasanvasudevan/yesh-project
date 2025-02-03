@@ -9,7 +9,7 @@ import LoginModal from "../dialogs/login-modal.jsx";
 
 
 export default function AppSidebar() {
-  const {isLoggedIn} = useLoginStore();
+  const {isLoggedIn, setLogout} = useLoginStore();
   const { open } = useModal();
   const Menus = [
     {
@@ -51,6 +51,10 @@ export default function AppSidebar() {
     open('login-modal', {
       content: <LoginModal name={'login-modal'} />
     });
+  }
+
+  const logout = () => {
+    setLogout()
   }
 
 
@@ -112,9 +116,17 @@ export default function AppSidebar() {
         </Alert>
       )}
 
+      {!isLoggedIn && (
       <div className={'mt-2'}>
         <Button className={'w-full'} onClick={openLoginModal} size={'xs'}>Login</Button>
       </div>
+      )}
+
+      {isLoggedIn && (
+        <div className={'mt-2'}>
+          <Button className={'w-full'} onClick={logout} size={'xs'}>Logout</Button>
+        </div>
+      )}
     </Sidebar>
   )
 }

@@ -10,7 +10,7 @@ export const useLoginStore = create((set) => ({
   appCodes: [],
   setIsLoggedIn: (isLoggedIn, loggedInAttributes) =>
     set({ isLoggedIn, loggedInAttributes }),
-  setLogout: () => set({ isLoggedIn: false, loggedInAttributes: undefined }),
+  setLogout: () => set({ isLoggedIn: false, loggedInAttributes: undefined , userRoles: [], loSupportedApps: [], accessibleEnv: [], appCodes: []}),
   setOpenLoginDialog: (openLoginDialog) => set({ openLoginDialog }),
   setUserRoles: (userRoles) => set({ userRoles }),
   setLoSupportedApps: (loSupportedApps) => set({ loSupportedApps }),

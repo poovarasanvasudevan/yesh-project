@@ -9,7 +9,7 @@ import { useEnv } from "../../core/states/env-store.jsx";
 
 const LoginModal = ( { name }) => {
   const { setIsLoggedIn, setUserRoles , setLoSupportedApps, setAccessibleEnv, setAppCodes, appCodes} = useLoginStore();
-  const {env, appCode, setAppCode} = useEnv();
+  const {env, setAppCode, appCode} = useEnv();
   const [state, setState] = useSetState({
     loading: false,
     btnText: "Validate",
@@ -45,10 +45,19 @@ const LoginModal = ( { name }) => {
     return true;
   }
 
+  const appCodeValidate = () => {
+    if(appCode === '') {
+      setState({validationError: {appCode: "App Code is required"}});
+      return false;
+    }
+
+    return true;
+  }
+
   const onClickSubmit = () => {
     setState({loading: true, btnText: "Validating..."});
 
-    if(validate()) {
+    if(appCodes.length ===0 && validate()) {
       fetch(getBaseURL(env) + `validateldapcredentials`, {
         method: 'POST',
         mode:'cors',
@@ -60,7 +69,8 @@ const LoginModal = ( { name }) => {
         headers: {
           'Content-Type': 'application/json'
         }
-      }).then(res => res.json())
+      })
+        .then(res => res.json())
         .then((result) => {
           setUserRoles(result.usr_roles);
           setLoSupportedApps(result.lo_support_apps);
@@ -88,6 +98,8 @@ const LoginModal = ( { name }) => {
            })
           }
         })
+    } else if(appCodes.length > 0 && appCodeValidate()) {
+      close(name);
     }
   }
 
@@ -114,7 +126,10 @@ const LoginModal = ( { name }) => {
 
         {appCodes.length > 1 && (
           <FormControlItem label="App Code" id="app-code">
-            <Select id="app-code" sizing={'sm'} onChange={(e) => setAppCode(e.target.value)}>
+            <Select id="app-code" sizing={'sm'} onChange={(e) =>  {
+                setAppCode(e.target.value);
+            }}>
+              <option value={''}></option>
               {appCodes.map((val) => (
                 <option value={val} key={val}>{val}</option>
               ))}
