@@ -6,11 +6,21 @@ import { MdOutlineAssignment } from "react-icons/md";
 import { FormControlItem } from "../form/control.jsx";
 import { useModal } from "@saimin/react-modal-manager";
 import LoginModal from "../dialogs/login-modal.jsx";
+import { useEnv } from "../../core/states/env-store.jsx";
 
 
 export default function AppSidebar() {
-  const {isLoggedIn, setLogout} = useLoginStore();
+  const {isLoggedIn, setLogout, appCodes} = useLoginStore();
+  const { appCode, setAppCode} = useEnv();
   const { open } = useModal();
+
+
+  const preEnv = [
+    {label: "DEV", value: "dev"},
+    {label: "SIT", value: "sit"},
+    {label: "UAT", value: "uat"},
+    {label: "PROD", value: "prod"},
+  ]
   const Menus = [
     {
       label: "Support Control",
@@ -67,19 +77,17 @@ export default function AppSidebar() {
       <div className={'px-2 gap-2 flex flex-col'}>
         <FormControlItem label={'Select Environment'} id={'env'}>
           <Select id={'env'} required sizing={'sm'}>
-            <option value={'dev'}>DEV</option>
-            <option value={'sit'}>SIT</option>
-            <option value={'uat'}>UAT</option>
-            <option value={'prod'}>PROD</option>
+            {preEnv.map((val) => (
+              <option value={val.value} key={val.value}>{val.label}</option>
+            ))}
           </Select>
         </FormControlItem>
 
         <FormControlItem label={'App Code'} id={'appcode'}>
-          <Select id={'env'} required sizing={'sm'}>
-            <option value={'dev'}>DEV</option>
-            <option value={'sit'}>SIT</option>
-            <option value={'uat'}>UAT</option>
-            <option value={'prod'}>PROD</option>
+          <Select id={'env'} required sizing={'sm'} value={appCode} onChange={(e) =>  setAppCode(e.target.value)}>
+            {appCodes.map((val) => (
+              <option value={val} key={val}>{val}</option>
+            ))}
           </Select>
         </FormControlItem>
       </div>
