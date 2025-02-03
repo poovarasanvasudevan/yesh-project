@@ -56,7 +56,7 @@ const LoginModal = ( { name }) => {
   }
 
   const onClickSubmit = () => {
-    setState({loading: true, btnText: "Validating..."});
+    setState({loading: true, btnText: "Validating...", error: "" , validationError: {username: "", password: "", appCode: ""}});
 
     if(appCodes.length ===0 && validate()) {
       fetch(getBaseURL(env) + `validateldapcredentials`, {
@@ -107,6 +107,7 @@ const LoginModal = ( { name }) => {
           })
         });
     } else if(appCodes.length > 0 && appCodeValidate()) {
+      setState({ btnText: "Logging in..." })
       close(name);
     }
   }
