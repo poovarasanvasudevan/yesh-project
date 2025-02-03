@@ -56,9 +56,10 @@ const LoginModal = ( { name }) => {
   }
 
   const onClickSubmit = () => {
-    setState({loading: true, btnText: "Validating...", error: "" , validationError: {username: "", password: "", appCode: ""}});
+    setState({loading: true, error: "" , validationError: {username: "", password: "", appCode: ""}});
 
     if(appCodes.length ===0 && validate()) {
+      setState({ btnText: "Validating..." })
       fetch(getBaseURL(env) + `validateldapcredentials`, {
         method: 'POST',
         mode:'cors',
