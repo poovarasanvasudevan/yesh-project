@@ -15,10 +15,15 @@ body, html {
   width: 100%;
 }
 
-#root , #modal-root {
+#root {
   height: 100%;
   width: 100%;
   display: flex;
+  zoom: var(--zoom-value);
+  font-family: "Radio Canada", sans-serif !important;
+}
+
+#modal-root {
   zoom: var(--zoom-value);
   font-family: "Radio Canada", sans-serif !important;
 }
@@ -36,5 +41,5 @@ body, html {
 }
 
 .adhoc-support-action {
-  transform: translate(1568px, 55px)!important;
+  transform: translate(1451px, 55px)!important;
 }

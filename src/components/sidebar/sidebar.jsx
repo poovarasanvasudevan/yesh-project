@@ -49,7 +49,7 @@ export default function AppSidebar() {
 
   const openLoginModal = () => {
     open('login-modal', {
-      content: <LoginModal />
+      content: <LoginModal name={'login-modal'} />
     });
   }
 

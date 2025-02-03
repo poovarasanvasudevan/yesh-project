@@ -3,13 +3,16 @@ import { useSetState } from "ahooks";
 import { FormControlItem } from "../form/control.jsx";
 import { Button, Select, TextInput } from "flowbite-react";
 import { BiLock } from "react-icons/bi";
+import { useModal } from "@saimin/react-modal-manager";
 
-const LoginModal = () => {
+const LoginModal = ( { name }) => {
   const { openLoginDialog, setOpenLoginDialog } = useLoginStore();
   const [state, setState] = useSetState({
     loading: false,
     btnText: "Validate",
   });
+
+  const { close } = useModal()
 
   const dpValues = Array.from({ length: 150 }, (_, i) => i + 1);
   return (
@@ -40,7 +43,7 @@ const LoginModal = () => {
         <div className={'flex space-x-2'}>
           <div className={'flex-1'}></div>
           <Button color="blue" size="xs" className={'mt-4'}>{state.btnText}</Button>
-          <Button color="failure" size="xs" className={'mt-4'}>Cancel</Button>
+          <Button color="failure" size="xs" className={'mt-4'} onClick={() => close(name)}>Cancel</Button>
         </div>
       </div>
   );
