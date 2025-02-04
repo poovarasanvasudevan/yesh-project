@@ -9,7 +9,7 @@ export const StatusRenderer = ({ value }) => {
 
 export const JobAuditAction = (params) => {
   return (
-    <Dropdown label="Open Action" dismissOnClick={false}>
+    <Dropdown label="Open Action" dismissOnClick={false} size={'xs'}>
       <Dropdown.Item>Step Audit</Dropdown.Item>
       <Dropdown.Item>Logs</Dropdown.Item>
       <Dropdown.Item>Re-Run</Dropdown.Item>
