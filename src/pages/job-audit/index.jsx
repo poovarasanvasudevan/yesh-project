@@ -3,7 +3,7 @@ import { getBaseURL } from "../../core/api/api-values.jsx";
 import { useEnv } from "../../core/states/env-store.jsx";
 import { useEffect } from "react";
 import { useSetState } from "ahooks";
-import { StatusRenderer } from "../../components/table/cell-renderer.jsx";
+import { JobAuditAction, StatusRenderer } from "../../components/table/cell-renderer.jsx";
 
 const JobAudit = () => {
 
@@ -19,7 +19,7 @@ const JobAudit = () => {
     {flex: 1, field: "job_nm", headerName: "Job Name"},
     {flex: 1, field: "edl_run_id", headerName: "EDL Run ID"},
     {flex: 1, field: "job_stts", headerName: "Job Status", cellRenderer: StatusRenderer},
-    {flex: 1, field: "id", headerName: "Action"},
+    {flex: 1, field: "id", headerName: "Action", cellRenderer: JobAuditAction},
   ];
 
   const callAPI = async ( env, appCode ) => {
