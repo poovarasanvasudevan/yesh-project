@@ -52,7 +52,7 @@ const JobAudit = () => {
 
         <div className={'flex flex-col flex-end'}>
           {state.result.length > 0 && state.result[0].load_end_tm &&
-            <div className={'text-[12px] text-gray-600'}>Display data over {state.result[0].load_end_tm}</div>
+            <div className={'text-[12px] text-gray-600 mb-1'}>Display data over {state.result[0].load_end_tm}</div>
           }
           <div className={'flex gap-1'}>
             <Button color="blue" size="xs" onClick={refresh}>
