@@ -3,6 +3,7 @@ import { getBaseURL } from "../../core/api/api-values.jsx";
 import { useEnv } from "../../core/states/env-store.jsx";
 import { useEffect } from "react";
 import { useSetState } from "ahooks";
+import { StatusRenderer } from "../../components/table/cell-renderer.jsx";
 
 const JobAudit = () => {
 
@@ -17,7 +18,7 @@ const JobAudit = () => {
     {flex: 1, field: "job_id", headerName: "Job ID"},
     {flex: 1, field: "job_nm", headerName: "Job Name"},
     {flex: 1, field: "edl_run_id", headerName: "EDL Run ID"},
-    {flex: 1, field: "status", headerName: "Job Status"},
+    {flex: 1, field: "job_stts", headerName: "Job Status", cellRenderer: StatusRenderer},
     {flex: 1, field: "id", headerName: "Action"},
   ];
 
