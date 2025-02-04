@@ -11,7 +11,7 @@ export const JobAuditAction = (params) => {
   return (
     <Dropdown
       dismissOnClick={false}
-      renderTrigger={() => <span className={'px-1 py-1 bg-blue-500'}>Open Action</span>}
+      renderTrigger={() => <span className={'px-1 py-1 bg-blue-500 text-[11px] text-white'}>Open Action</span>}
     >
       <Dropdown.Item>Step Audit</Dropdown.Item>
       <Dropdown.Item>Logs</Dropdown.Item>
