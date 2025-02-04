@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 
 
-export const DatatableComponent = ({ rows, columns }) => {
+export const DatatableComponent = ({ rows, columns , loading = false}) => {
 
 
   const myTheme = useMemo(() => {
@@ -36,6 +36,7 @@ export const DatatableComponent = ({ rows, columns }) => {
   return (
     <div className={'w-full pb-2'}>
       <AgGridReact
+        loading={loading}
         rowData={rows}
         pagination={true}
         theme={myTheme}
