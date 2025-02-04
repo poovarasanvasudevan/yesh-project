@@ -4,6 +4,8 @@ import { useEnv } from "../../core/states/env-store.jsx";
 import { useEffect } from "react";
 import { useSetState } from "ahooks";
 import { JobAuditAction, StatusRenderer } from "../../components/table/cell-renderer.jsx";
+import { Button, Dropdown } from "flowbite-react";
+import { IoIosRefresh } from "react-icons/io";
 
 const JobAudit = () => {
 
@@ -22,9 +24,9 @@ const JobAudit = () => {
     {flex: 1, field: "id", headerName: "Action", cellRenderer: JobAuditAction},
   ];
 
-  const callAPI = async ( env, appCode ) => {
+  const callAPI = async ( env, appCode , dateFilter = undefined ) => {
     setState({loading: true})
-    const data =  await fetch(getBaseURL(env) + `getauditdetails?env=${env}&app_cd=${appCode}&queryType=jobAudt`).then(x => x.json())
+    const data =  await fetch(getBaseURL(env) + `getauditdetails?env=${env}&app_cd=${appCode}&queryType=jobAudt${dateFilter ? `&dt_fltr=${dateFilter}`: ''}`).then(x => x.json())
     setState({result: data, loading: false})
   }
 
@@ -32,11 +34,30 @@ const JobAudit = () => {
     callAPI(env, appCode)
   }, [env, appCode]);
 
+  const loadMore = () => {
+    callAPI(env, appCode, state.result[0].load_end_tm)
+  }
+  const refresh = () => {
+    callAPI(env, appCode)
+  }
 
   return (
     <>
-      <div className={'flex mb-1 mt-2 gap-2 flex-col align-center flex-wrap justify-between'}>
-        <h6 className='flex-1'>Job Audit</h6>
+      <div className={'flex p-4 items-center'}>
+        <div className={'flex-1'}>
+          <h3 className={'font-semibold text-[18px]'}> Job Audit</h3>
+        </div>
+
+        <div className={'flex flex-end gap-1'}>
+          <Button color="blue" size="xs" onClick={refresh}>
+            Refresh &nbsp;
+            <IoIosRefresh />
+          </Button>
+
+          <Button color="blue" size="xs" onClick={loadMore}>
+            Load More
+          </Button>
+        </div>
       </div>
       <div className={'flex-1 flex w-[100%] overflow-y-auto'}>
         <DatatableComponent loading={state.loading}  rows={state.result} columns={columns}/>
