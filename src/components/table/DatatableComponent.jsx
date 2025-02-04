@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 
 
-export const DatatableComponent = ({ rows, columns , loading = false}) => {
+export const DatatableComponent = ({ rows, columns , loading = false, ...props}) => {
 
 
   const myTheme = useMemo(() => {
@@ -41,6 +41,7 @@ export const DatatableComponent = ({ rows, columns , loading = false}) => {
         pagination={true}
         theme={myTheme}
         columnDefs={columns}
+        {...props}
       />
     </div>
   );

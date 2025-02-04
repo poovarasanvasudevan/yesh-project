@@ -16,6 +16,7 @@ const JobAudit = () => {
   })
 
   const columns = [
+    { headerName: "hidden", field: "jobMetadata", width: 0, hide: true },
     {flex: 1, field: "aplctn_cd", headerName: "Application Code"},
     {flex: 1, field: "job_id", headerName: "Job ID"},
     {flex: 1, field: "job_nm", headerName: "Job Name"},
