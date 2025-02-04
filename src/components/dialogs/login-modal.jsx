@@ -88,7 +88,7 @@ const LoginModal = ( { name }) => {
               accessibleEnv: result.accessible_environments,
               btnText: "Login"
             })
-
+            setAppCode(result.app_cd.length > 0 ? result.app_cd[0] : 'ALL');
           } else {
            setState({
             error: "Invalid Username or Password",

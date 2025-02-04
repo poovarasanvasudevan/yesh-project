@@ -9,7 +9,7 @@ const JobAudit = () => {
   const { env, appCode} = useEnv()
   const [state, setState]=  useSetState({
     result: [],
-    loading: false
+    loading: false,
   })
 
   const columns = [
@@ -23,8 +23,7 @@ const JobAudit = () => {
 
   const callAPI = async ( env, appCode ) => {
     setState({loading: true})
-    const data =  await fetch(getBaseURL(env) + `getauditdetails?env=${env}&app_cd=${appCode}&queryType=jobAudt`)
-      .then(x => x.json())
+    const data =  await fetch(getBaseURL(env) + `getauditdetails?env=${env}&app_cd=${appCode}&queryType=jobAudt`).then(x => x.json())
     setState({result: data, loading: false})
   }
 
