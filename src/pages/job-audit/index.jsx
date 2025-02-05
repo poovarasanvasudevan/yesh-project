@@ -6,6 +6,7 @@ import { useSetState } from "ahooks";
 import { JobAuditAction, StatusRenderer } from "../../components/table/cell-renderer.jsx";
 import { Button } from "flowbite-react";
 import { IoIosRefresh } from "react-icons/io";
+import { CommonFunc } from "../../core/utils.jsx";
 
 const JobAudit = () => {
 
@@ -17,16 +18,84 @@ const JobAudit = () => {
 
   const columns = [
     { headerName: "hidden", field: "jobMetadata", width: 0, hide: true },
-    {flex: 1, field: "aplctn_cd", headerName: "Application Code"},
-    {flex: 1, field: "job_id", headerName: "Job ID"},
-    {flex: 1, field: "job_nm", headerName: "Job Name"},
-    {flex: 1, field: "edl_run_id", headerName: "EDL Run ID"},
-    {flex: 1, field: "job_stts", headerName: "Job Status", cellRenderer: StatusRenderer},
-    {flex: 1, field: "id", headerName: "Action", cellRenderer: JobAuditAction},
+    {
+      headerName: "Application Code",
+      field: "aplctn_cd",
+      cellStyle: { "text-align": "center" },
+      width: 200,
+      filterParams: { apply: true, newRowsAction: 'keep' }
+    },
+    {
+      headerName: "Job ID",
+      field: "job_id",
+      cellStyle: { "text-align": "center" },
+      width: 120,
+      cellRenderer: "viewRenderer",
+      filterParams: { apply: true, newRowsAction: 'keep' }
+    },
+    {
+      headerName: "Job Name",
+      field: "job_nm",
+      cellStyle: { "text-align": "center" },
+      width: 320,
+      filterParams: { apply: true, newRowsAction: 'keep' }
+    },
+    {
+      headerName: "EDL Run ID",
+      field: "edl_run_id",
+      cellStyle: { "text-align": "center" },
+      width: 320,
+      filterParams: { apply: true, newRowsAction: 'keep' }
+    },
+    {
+      headerName: "Job Start Time (EST)",
+      field: "job_strt_tm_utc",
+      cellStyle: { "text-align": "center" },
+      width: 240,
+      cellRenderer: (p) => {
+        return CommonFunc.convertTZ(p.value)
+      },
+      filterParams: { apply: true, newRowsAction: 'keep' }
+    },
+    {
+      headerName: "Job End Time (EST)",
+      field: "job_end_tm_utc",
+      cellStyle: { "text-align": "center" },
+      width: 240,
+      cellRenderer: (p) => {
+        return CommonFunc.convertTZ(p.value)
+      },
+      filterParams: { apply: true, newRowsAction: 'keep' }
+    },
+    {
+      headerName: "Processed Time",
+      field: "processing_time",
+      cellStyle: { "text-align": "center" },
+      width: 175,
+      filterParams: { apply: true, newRowsAction: 'keep' }
+    },
+    {
+      headerName: "Job Status",
+      field: "job_stts",
+      cellStyle: function (params) {
+        return CommonFunc.SetColor(params);
+      },
+      pinned: "right",
+      suppressMovable: true,
+      filterParams: { apply: true, newRowsAction: 'keep' }
+    },
+    {
+      flex: 1, field: "id", headerName: "Action",
+      cellRenderer: JobAuditAction,
+      pinned: "right",
+      suppressMovable: false,
+      sorting: false,
+      filter: false,
+    },
   ];
 
   const callAPI = async (env, appCode, dateFilter = undefined) => {
-    setState({loading: true})
+    //  setState({loading: true})
     const data = await fetch(getBaseURL(env) + `getauditdetails?env=${env}&app_cd=${appCode}&queryType=jobAudt${dateFilter ? `&dt_fltr=${dateFilter}` : ''}`).then(x => x.json())
     setState({result: [...data, state.result], loading: false})
   }
@@ -60,7 +129,7 @@ const JobAudit = () => {
               Refresh &nbsp;
               <IoIosRefresh/>
             </Button>
-            <Button color="blue" size="xs" onClick={loadMore}>
+            <Button color="success" size="xs" onClick={loadMore}>
               Load More
             </Button>
           </div>
