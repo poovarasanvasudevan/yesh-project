@@ -23,13 +23,14 @@ export const DatatableComponent = ({ rows, columns , loading = false, ...props})
         headerFontSize: 14,
         headerFontWeight: 600,
         headerTextColor: 'black',
+        headerBackgroundColor:'#f9fafb',
         rowBorder: true,
         rowVerticalPaddingScale: 0.8,
         sidePanelBorder: true,
         spacing: 6,
         wrapperBorder: true,
         wrapperBorderRadius: 4,
-        headerHeight: 36,
+        headerHeight: 38,
       });
   },[ ])
 

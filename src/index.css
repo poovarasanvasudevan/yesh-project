@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 :root {
-  --zoom-value: 0.85;
+  --zoom-value: 0.8;
 }
 
 body, html {
@@ -42,4 +42,37 @@ body, html {
 
 .adhoc-support-action {
   transform: translate(1451px, 55px)!important;
+}
+
+.button {
+  padding: 0;
+  border: 0;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  outline: 0;
+}
+
+.dropdown-wrapper {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 300px;
+  z-index: 2;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14);
+}
+
+.dropdown-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-menu__item {
+  padding: 8px 12px;
+}
+.dropdown-menu__item:hover {
+  background-color: rgba(0, 0, 0, 0.14);
+  cursor: pointer;
 }
