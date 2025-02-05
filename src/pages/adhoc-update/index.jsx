@@ -3,10 +3,13 @@ import { useSetState } from "ahooks";
 import { Alert , Select, TextInput, Button, Textarea } from "flowbite-react";
 import { IoIosAdd, IoIosTrash } from "react-icons/io";
 import { FormControlItem } from "../../components/form/control.jsx";
+import { useEffect } from "react";
+import { useEnv } from "../../core/states/env-store.jsx";
+import { getBaseURL } from "../../core/api/api-values.jsx";
 
 const AdhocUpdate = () => {
-  const { isLoggedIn } = useLoginStore();
-
+  const { isLoggedIn, userRoles, loSupportedApps } = useLoginStore();
+  const { appCode, env} = useEnv()
   const [state, setState] = useSetState({
     columns: [
       {
@@ -14,7 +17,61 @@ const AdhocUpdate = () => {
         value: "",
       },
     ],
+    textAreaValue: "",
+    tables: [],
+    selectedTable: "",
+    tableColumns:[]
   });
+
+  const permissionRoleList = ['AEDLLOADMIN', 'EDLDEVOPS', 'LOAPPIM']
+  const denyRoleList = ['ADMIN']
+
+
+  const isAllowed = userRoles?.filter(x => permissionRoleList.includes(x))
+  const isNotAllowed =  userRoles?.filter(x => denyRoleList.includes(x))
+
+  const fetchTables = async () => {
+    await fetch(getBaseURL(env) + `getjobportalparms?env=${env}&dropDownCol=cnfg_tbl_nms&fetchFrom=supportParms`)
+      .then(res => res.json())
+      .then(tableData => {
+        let tables = tableData.cnfg_tbl_nms;
+        let tableDatas = tables.map(x => ({ tableName: x}))
+        setState({ tables: [{tableName: ""},...tableDatas] });
+      })
+  }
+
+  const fetchColumns = async (tableName) => {
+    if (tableName === undefined || tableName.tableName === undefined) return;
+    let tblName = tableName.tableName.replace(' ', '');
+
+    let txtAreaValue = `WHERE aplctn_cd='${appCode}'`
+    if(tableName.tableName === 'falcon_meta_cfg') {
+      txtAreaValue = `WHERE aplctn_cd='${appCode}' AND meta_id=''`
+    } else if(tableName.tableName === 'falcon_meta_tbl_stats') {
+      txtAreaValue = `WHERE aplctn_cd='${appCode}' AND stats_id=''`
+    }
+
+    setState({textAreaValue: txtAreaValue})
+
+    await fetch(getBaseURL(env) + `getmetadata?env=${env}&rqstMtdata=fetchColumns&table_nm=${tblName}&fetchFrom=supportParms&usr_role=${userRoles.join(',')}&app_cd=${appCode}&lo_support_apps=${loSupportedApps.join(',')}`)
+      .then(res => res.json())
+      .then(data => {
+        let columns = data.column_name.map(x => ({ columnName: x, isVisible: true }));
+        setState({ tableColumns: [{columnName: "", isVisible: true}, ...columns] });
+      })
+  }
+
+
+  useEffect(() => {
+    setState({textAreaValue: `WHERE aplctn_cd='${appCode}'`})
+    fetchTables()
+  },[appCode])
+
+  const onTableChange = async (e) => {
+    setState({ selectedTable: e.target.value });
+    await fetchColumns({ tableName: e.target.value });
+  }
+
 
   const onAddColumn = () => {
     setState((prev) => ({
@@ -31,6 +88,41 @@ const AdhocUpdate = () => {
   };
 
 
+  const onColumnChange = (e, index) => {
+    const { name, value } = e.target;
+    setState((prev) => {
+      const columns = [...prev.columns];
+      columns[index] = { name, value };
+      return { columns };
+    });
+  }
+
+  const onColumnValueChanged = (e, index) => {
+    const { name, value } = e.target;
+    setState((prev) => {
+      const columns = [...prev.columns];
+      columns[index] = { name, value };
+      return { columns };
+    });
+  }
+
+  const onTextAreaValueChange = (e) => {
+    const {  value } = e.target;
+    setState({ textAreaValue: value });
+  }
+
+  const frameQuery = () => {
+    let updateQuery = `UPDATE ${state.selectedTable} SET `;
+    state.columns.forEach((column, index) => {
+      updateQuery += `${column.name} = ${column.value}`;
+      if (index < state.columns.length - 1) {
+        updateQuery += ", ";
+      }
+    });
+    updateQuery += ` ${state.textAreaValue}`;
+    return updateQuery;
+  }
+
   return (
     <>
       <div className={'p-4'}>
@@ -45,11 +137,12 @@ const AdhocUpdate = () => {
             <div className={'flex flex-col gap-1 w-[700px]'}>
 
               <FormControlItem label="Table Name" id="table-name">
-                <Select id="table-name" required sizing={'sm'}>
-                  <option value={'dev'}>DEV</option>
-                  <option value={'sit'}>SIT</option>
-                  <option value={'uat'}>UAT</option>
-                  <option value={'prod'}>PROD</option>
+                <Select id="table-name" required sizing={'sm'} onChange={onTableChange}>
+                  {state.tables.map((table, index) => (
+                    <option value={table.tableName} key={index}>
+                      {table.tableName}
+                    </option>
+                  ))}
                 </Select>
               </FormControlItem>
 
@@ -58,16 +151,17 @@ const AdhocUpdate = () => {
                   <div className={'flex flex-row gap-2'} key={'x' + index}>
 
                     <FormControlItem label="Column Name" id="column-name">
-                      <Select id="table-name" required sizing={'sm'} className={'w-[200px]'}>
-                        <option value={'dev'}>DEV</option>
-                        <option value={'sit'}>SIT</option>
-                        <option value={'uat'}>UAT</option>
-                        <option value={'prod'}>PROD</option>
+                      <Select id="column-name" required sizing={'sm'} className={'w-[200px]'} onChange={(e) => onColumnChange(e, index)}>
+                        {state.tableColumns.map((column, index) => (
+                          <option value={column.columnName} key={`col_`+index}>
+                            {column.columnName}
+                          </option>
+                        ))}
                       </Select>
                     </FormControlItem>
 
-                    <FormControlItem label={'Column Name'} id={'column-name'}>
-                      <TextInput id={'column-name'} required sizing={'sm'} className={'w-[300px]'} />
+                    <FormControlItem label={'Column Value'} id={'column-name'}>
+                      <TextInput id={'column-value'} required sizing={'sm'} className={'w-[300px]'} onChange={(e) => onColumnValueChanged(e, index)} />
                     </FormControlItem>
 
 
@@ -92,7 +186,10 @@ const AdhocUpdate = () => {
               </div>
 
               <FormControlItem label="Query" id="Query" className={'mt-2'}>
-                  <Textarea id="Query" required rows={8} placeholder="Where aplctn_cd='ALL'" className={'w-full'} />
+                  <Textarea id="Query"
+                            value={state.textAreaValue}
+                            onChange={onTextAreaValueChange}
+                            required rows={8} placeholder="Where aplctn_cd='ALL'" className={'w-full'} />
               </FormControlItem>
 
               <div className={'mt-3'}>

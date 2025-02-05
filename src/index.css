@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 :root {
-  --zoom-value: 0.8;
+  --zoom-value: 0.84;
 }
 
 body, html {
