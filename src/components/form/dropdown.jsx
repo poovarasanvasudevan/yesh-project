@@ -1,38 +1,46 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState , useRef} from 'react';
+import './dropdown.css'
 
-export const DropDownMenu = ( { render , options }) => {
-  const [open, setOpen] = useState(false);
-  const container = useRef(null);
+const Dropdown = ({ options, render , onChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const handleClickOutside = event => {
-    if (container.current && !container.current.contains(event.target)) {
-      setOpen(false);
+  const handleOptionClick = (option) => {
+    setIsOpen(false);
+    onChange(option);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
     }
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      // clean up
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
-  });
+  }, []);
+
 
   return (
-    <div className="container" ref={container}>
-      <button type="button" className="button" onClick={() => setOpen(!open)}>
+    <div className="dropdown" ref={dropdownRef}>
+      <button onClick={toggleDropdown}>
         {render}
       </button>
-
-        <div className="bg-black z-20 absolute">
-          <ul className="dropdown-menu">
-            {options.map((option) => (
-              <li key={option.id} className="dropdown-menu__item">{option.label}</li>
-            ))}
-          </ul>
-        </div>
-
+      {isOpen && (
+        <ul className="dropdown-menu">
+          {options.map((option, index) => (
+            <li key={index} onClick={() => handleOptionClick(option)}>
+              {option}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
+
+export default Dropdown;

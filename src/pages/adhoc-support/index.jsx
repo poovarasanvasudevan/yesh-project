@@ -1,6 +1,7 @@
 import { useSetState } from "ahooks";
-import { Button, Dropdown , Tabs} from "flowbite-react";
+import { Button, Tabs} from "flowbite-react";
 import { IoIosRefresh } from "react-icons/io";
+import Dropdown from "../../components/form/dropdown.jsx";
 
 
 const AdhocSupport = () => {
@@ -37,12 +38,24 @@ const AdhocSupport = () => {
             <IoIosRefresh />
           </Button>
 
-          <Dropdown size="xs" label="Dropdown button" dismissOnClick={true} className={'adhoc-support-action'}>
-            <Dropdown.Item>Force Run</Dropdown.Item>
-            <Dropdown.Item>Unload</Dropdown.Item>
-            <Dropdown.Item>Active</Dropdown.Item>
-            <Dropdown.Item>In Active</Dropdown.Item>
-          </Dropdown>
+          <Dropdown
+            options={[
+              "Force Run",
+              "Unload",
+              "Active",
+              "In Active",
+            ]}
+            render={
+              <Button color="success" size="xs">Action</Button>
+            }
+          />
+
+          {/*<Dropdown size="xs" label="Dropdown button" dismissOnClick={true} className={'adhoc-support-action'}>*/}
+          {/*  <Dropdown.Item>Force Run</Dropdown.Item>*/}
+          {/*  <Dropdown.Item>Unload</Dropdown.Item>*/}
+          {/*  <Dropdown.Item>Active</Dropdown.Item>*/}
+          {/*  <Dropdown.Item>In Active</Dropdown.Item>*/}
+          {/*</Dropdown>*/}
         </div>
       </div>
 

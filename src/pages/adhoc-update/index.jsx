@@ -36,6 +36,7 @@ const AdhocUpdate = () => {
 
   const isAllowed = userRoles?.filter(x => permissionRoleList.includes(x))
   const isNotAllowed =  userRoles?.filter(x => denyRoleList.includes(x))
+  const isDisabled = appCode === 'ALL' || !isLoggedIn  || (env === 'prod'&& isNotAllowed.length > 0);
 
   const fetchTables = async () => {
     await fetch(getBaseURL(env) + `getjobportalparms?env=${env}&dropDownCol=cnfg_tbl_nms&fetchFrom=supportParms`)
@@ -342,7 +343,7 @@ const AdhocUpdate = () => {
               </FormControlItem>
 
               <div className={'mt-3'}>
-                <Button  size="xs" onClick={handleSubmit}>
+                <Button  size="xs" onClick={handleSubmit} disabled={isDisabled}>
                   Submit
                 </Button>
               </div>

@@ -1,5 +1,5 @@
 import { Badge } from "flowbite-react";
-import { DropDownMenu } from "../form/dropdown.jsx";
+import Dropdown from "../form/dropdown.jsx";
 
 
 export const StatusRenderer = ({value}) => {
@@ -12,12 +12,12 @@ export const StatusRenderer = ({value}) => {
 
 export const JobAuditAction = (params) => {
   return (
-    <DropDownMenu
+    <Dropdown
       options={[
-        {id: 'step-audit', label: 'Step Audit'},
-        {id: 'logs', label: 'Logs'},
-        {id: 're-run', label: 'Re-Run'},
-        {id: 'force-complete', label: 'Force Complete'},
+        "Step Audit",
+        "Logs",
+        "Re-Run",
+        "Force Complete",
       ]}
       render={
         <span className={'px-3 py-1 bg-blue-500 text-[11px] text-white rounded'}>Open Action</span>
