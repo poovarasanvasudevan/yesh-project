@@ -61,6 +61,9 @@ export default function AppSidebar() {
     root: {
       inner: "h-full overflow-y-auto overflow-x-hidden rounded bg-gray-50 px-3 py-4 dark:bg-gray-800 flex flex-col",
     },
+    collapse: {
+      "list":"py-0"
+    }
   };
 
   const openLoginModal = () => {
