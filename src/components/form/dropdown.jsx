@@ -24,21 +24,18 @@ const Dropdown = ({ options, render , onChange }) => {
     };
   }, []);
 
-
   return (
     <div className="dropdown" ref={dropdownRef}>
       <button onClick={toggleDropdown}>
         {render}
       </button>
-      {isOpen && (
-        <ul className="dropdown-menu">
+      {isOpen && ( <ul className="dropdown-menu">
           {options.map((option, index) => (
             <li key={index} onClick={() => handleOptionClick(option)}>
               {option}
             </li>
           ))}
-        </ul>
-      )}
+        </ul> )}
     </div>
   );
 };

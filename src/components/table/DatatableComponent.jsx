@@ -29,8 +29,8 @@ export const DatatableComponent = ({ rows, columns , loading = false, ...props})
         sidePanelBorder: true,
         spacing: 6,
         wrapperBorder: true,
-        wrapperBorderRadius: 4,
-        headerHeight: 38,
+        wrapperBorderRadius: 0,
+        headerHeight: 36
       });
   },[ ])
 
@@ -42,6 +42,16 @@ export const DatatableComponent = ({ rows, columns , loading = false, ...props})
         pagination={true}
         theme={myTheme}
         columnDefs={columns}
+        paginationPageSizeSelector={false}
+        rowClassRules={{
+          "grid-row-even": function (params) {
+            return params.node.rowIndex % 2 === 0;
+          },
+          "grid-row-odd": function (params) {
+            return params.node.rowIndex % 2 !== 0;
+          },
+        }}
+
         {...props}
       />
     </div>
