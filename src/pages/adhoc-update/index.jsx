@@ -6,9 +6,13 @@ import { FormControlItem } from "../../components/form/control.jsx";
 import { useEffect } from "react";
 import { useEnv } from "../../core/states/env-store.jsx";
 import { getBaseURL } from "../../core/api/api-values.jsx";
+import { DialogSkeleton } from "../../components/dialogs/dialog-skeleton.jsx";
+import { useModal } from "@saimin/react-modal-manager";
+import LoginModal from "../../components/dialogs/login-modal.jsx";
+import { AlertDialog } from "../../components/dialogs/alert-dialog.jsx";
 
 const AdhocUpdate = () => {
-  const { isLoggedIn, userRoles, loSupportedApps } = useLoginStore();
+  const { isLoggedIn, userRoles, loSupportedApps,appCodes, loggedInAttributes } = useLoginStore();
   const { appCode, env} = useEnv()
   const [state, setState] = useSetState({
     columns: [
@@ -20,11 +24,14 @@ const AdhocUpdate = () => {
     textAreaValue: "",
     tables: [],
     selectedTable: "",
+    query: '',
     tableColumns:[]
   });
 
   const permissionRoleList = ['AEDLLOADMIN', 'EDLDEVOPS', 'LOAPPIM']
   const denyRoleList = ['ADMIN']
+
+  const { open, close } = useModal();
 
 
   const isAllowed = userRoles?.filter(x => permissionRoleList.includes(x))
@@ -123,6 +130,148 @@ const AdhocUpdate = () => {
     return updateQuery;
   }
 
+  const onConfirm = (name) => {
+    close(name);
+    initSubmit();
+  }
+
+  const initSubmit = () => {
+    const updateBodyParams = {
+      updt_qury: state.query,
+      where_cond: state.textAreaValue,
+      aplctn_cd: appCode,
+      reqstr_id: loggedInAttributes,
+      loginAppCodes: appCodes,
+      tbl_nm: state.selectedTable,
+      usr_role: userRoles
+    }
+
+    let url = getBaseURL(env) + `setactvflag?env=${env}&updtMtdata=adhocUpdt&autocommit=false`
+    fetch(url, {
+      method: 'PUT',
+      mode: 'cors',
+      body: JSON.stringify(updateBodyParams),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+      .then((result) => {
+        if(result.status === 202) {
+          open('final-modal', {
+            content: <FinalQueryDialog title={'Error'} message={result.message} name={'final-modal'} />
+          })
+        } else {
+          showAlertDialog(result)
+        }
+      })
+      .catch(err => {
+        showAlertDialog(err.message)
+      })
+  }
+
+  const onCommit = (name) => {
+    close(name);
+    const updateBodyParams = {
+      updt_qury: state.query,
+      where_cond: state.textAreaValue,
+      aplctn_cd: appCode,
+      reqstr_id: loggedInAttributes,
+      loginAppCodes: appCodes,
+      tbl_nm: state.selectedTable,
+      usr_role: userRoles
+    }
+    let url = getBaseURL(env) + `setactvflag?env=${env}&updtMtdata=adhocUpdt&autocommit=true`
+    fetch(url, {
+      method: 'PUT',
+      mode: 'cors',
+      body: JSON.stringify(updateBodyParams),
+      headers: { 'Content-Type': 'application/json' }
+    }).then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson) {
+          if (responseJson.status === 200)
+            showAlertDialog(responseJson.message,"Message");
+          else
+            showAlertDialog(responseJson, "Message");
+        }
+      })
+      .catch(() => {
+        showAlertDialog('Error occurred, please try again later.');
+      });
+  }
+
+  const showAlertDialog = (message, title='Error') => {
+    open('error-modal', {
+      content: <AlertDialog title={title} message={message} name={'error-modal'} />
+    })
+  }
+
+  const QueryPreviewDialog = ( { query, name  }) => {
+    return (
+      <DialogSkeleton
+        title={'Query Preview'}
+        className={'w-[600px] min-h-[200px]'} id={name}
+        footer={
+          <div className={'p-4 flex justify-end space-x-2'}>
+            <Button color={'failure'} size="xs" onClick={() => close(name)}>
+              Close
+            </Button>
+            <Button color={'success'} size="xs" onClick={() => onConfirm(name)}>
+              Confirm
+            </Button>
+          </div>
+        }>
+
+        <div className={'flex flex-col px-6 py-4'}>
+          <div className={'text-[14px]'}>
+            {query}
+          </div>
+          <div className={'mt-4'}>
+            {!query.includes('job_id') && (
+              <Alert color={'warning'}>
+                <b>Warning</b>
+                <span>Job ID is missing in Where Condition, Please verify query again to avoid bulk update before confirming.</span>
+              </Alert>
+            )}
+          </div>
+        </div>
+      </DialogSkeleton>
+    )
+  }
+  const FinalQueryDialog = ( { query, name  }) => {
+    return (
+      <DialogSkeleton
+        title={'Query Preview'}
+        className={'w-[600px] min-h-[200px]'} id={name}
+        footer={
+          <div className={'p-4 flex justify-end space-x-2'}>
+            <Button color={'failure'} size="xs" onClick={() => close(name)}>
+              Close
+            </Button>
+            <Button color={'success'} size="xs" onClick={() => onCommit(name)}>
+              Commit
+            </Button>
+          </div>
+        }>
+
+        <div className={'flex flex-col px-6 py-4'}>
+          <div className={'text-[14px]'}>
+            {query}
+          </div>
+        </div>
+      </DialogSkeleton>
+    )
+  }
+
+  const handleSubmit = () => {
+    let updateQuery = frameQuery();
+    setState({ query: updateQuery });
+
+    open('query-modal', {
+      content: <QueryPreviewDialog query={updateQuery} name='query-modal' />
+    });
+  }
+
   return (
     <>
       <div className={'p-4'}>
@@ -193,7 +342,7 @@ const AdhocUpdate = () => {
               </FormControlItem>
 
               <div className={'mt-3'}>
-                <Button  size="xs">
+                <Button  size="xs" onClick={handleSubmit}>
                   Submit
                 </Button>
               </div>

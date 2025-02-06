@@ -1,71 +1,38 @@
+import { useEffect, useRef, useState } from "react";
 
-import React, { useState } from "react";
-import styled from "styled-components";
+export const DropDownMenu = ( { render , options }) => {
+  const [open, setOpen] = useState(false);
+  const container = useRef(null);
 
-const Main = styled("div")`
-  font-family: sans-serif;
-  background: #f0f0f0;
-  height: 100vh;
-`;
-
-const DropDownContainer = styled("div")`
-  width: 10.5em;
-  margin: 0 auto;
-`;
-
-const DropDownHeader = styled("div")`
-  margin-bottom: 0.8em;
-  padding: 0.4em 2em 0.4em 1em;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
-  font-weight: 500;
-  font-size: 1.3rem;
-  color: #3faffa;
-  background: #ffffff;
-`;
-
-const DropDownListContainer = styled("div")``;
-
-const DropDownList = styled("ul")`
-  padding: 0;
-  margin: 0;
-  padding-left: 1em;
-  background: #ffffff;
-  border: 2px solid #e5e5e5;
-  box-sizing: border-box;
-  color: #3faffa;
-  font-size: 1.3rem;
-  font-weight: 500;
-  &:first-child {
-    padding-top: 0.8em;
-  }
-`;
-
-const ListItem = styled("li")`
-  list-style: none;
-  margin-bottom: 0.8em;
-`;
-
-
-export const DropdownMenu = ({ options, render, onSelect }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggling = () => setIsOpen(!isOpen);
-
-  const onOptionClicked = value => () => {
-    setIsOpen(false);
-    onSelect(value)
+  const handleClickOutside = event => {
+    if (container.current && !container.current.contains(event.target)) {
+      setOpen(false);
+    }
   };
 
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      // clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  });
 
   return (
-    <DropDownContainer>
-      <DropDownHeader onClick={toggling}>{render}</DropDownHeader>
-      <DropDownListContainer>
-        <DropDownList>
-          {options.map((option) => (
-            <ListItem onClick={()=> onOptionClicked(option)} key={option.id}>{option.value}</ListItem>
-          ))}
-        </DropDownList>
-      </DropDownListContainer>
-    </DropDownContainer>
+    <div className="container" ref={container}>
+      <button type="button" className="button" onClick={() => setOpen(!open)}>
+        {render}
+      </button>
+
+        <div className="bg-black z-20 absolute">
+          <ul className="dropdown-menu">
+            {options.map((option) => (
+              <li key={option.id} className="dropdown-menu__item">{option.label}</li>
+            ))}
+          </ul>
+        </div>
+
+    </div>
   );
-}
+};

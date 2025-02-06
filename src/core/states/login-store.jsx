@@ -8,6 +8,7 @@ export const useLoginStore = create((set) => ({
   loSupportedApps: [],
   accessibleEnv: [],
   appCodes: [],
+
   setIsLoggedIn: (isLoggedIn, loggedInAttributes) =>
     set({ isLoggedIn, loggedInAttributes }),
   setLogout: () => set({ isLoggedIn: false, loggedInAttributes: undefined , userRoles: [], loSupportedApps: [], accessibleEnv: [], appCodes: []}),
