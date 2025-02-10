@@ -10,13 +10,8 @@ const OrchestratorAudit = () => {
         </div>
 
         <div className={'flex flex-end gap-1'}>
-          <Button color="blue" size="xs">
-            Load More
-          </Button>
-          <Button color="blue" size="xs">
-            Refresh
-            <IoIosRefresh />
-          </Button>
+          <Button size="xs">Load More</Button>
+          <Button color="blue" size="xs">Refresh &nbsp;<IoIosRefresh /></Button>
         </div>
       </div>
 

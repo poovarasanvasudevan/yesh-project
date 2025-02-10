@@ -1,7 +1,7 @@
 import { AgGridReact } from "ag-grid-react";
 import { themeQuartz } from 'ag-grid-community'
-import { useMemo } from "react";
-
+import { useCallback, useMemo } from "react";
+import { Spinner } from "flowbite-react";
 
 
 export const DatatableComponent = ({ rows, columns , loading = false, ...props}) => {
@@ -34,11 +34,18 @@ export const DatatableComponent = ({ rows, columns , loading = false, ...props})
       });
   },[ ])
 
+
+
   return (
     <div className={'w-full pb-2'}>
       <AgGridReact
         loading={loading}
         rowData={rows}
+        overlayLoadingTemplate={'' +
+          '<div class="loadingx" style="margin: 7em"></div>' +
+          ' <span class="ag-overlay-loading-center " style="font-size: 18px; z-index: 100000"> Loading Rows ...</span>'
+      }
+
         pagination={true}
         theme={myTheme}
         columnDefs={columns}
