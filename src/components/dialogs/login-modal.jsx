@@ -150,8 +150,8 @@ const LoginModal = ( { name }) => {
 
         <div className={'flex space-x-2'}>
           <div className={'flex-1'}></div>
-          <Button color="blue" size="xs" className={'mt-4'} onClick={onClickSubmit}>{state.btnText}</Button>
-          <Button color="failure" size="xs" className={'mt-4'} onClick={() => close(name)}>Cancel</Button>
+          <Button  size="xs" className={'mt-4'} onClick={onClickSubmit}>{state.btnText}</Button>
+          <Button color="gray" size="xs" className={'mt-4'} onClick={() => close(name)}>Cancel</Button>
         </div>
       </div>
   );

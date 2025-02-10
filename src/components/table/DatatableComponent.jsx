@@ -29,7 +29,7 @@ export const DatatableComponent = ({ rows, columns , loading = false, ...props})
         sidePanelBorder: true,
         spacing: 6,
         wrapperBorder: true,
-        wrapperBorderRadius: 0,
+        wrapperBorderRadius: 8,
         headerHeight: 36
       });
   },[ ])
