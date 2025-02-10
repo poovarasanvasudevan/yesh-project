@@ -422,11 +422,9 @@ export const AdhocJobSubmit = () => {
             </FormControlItem>
             <FormControlItem required label={'Transaction IDS'} id={'transactionIds'} error={state.errors.transactionIds}>
               <TextInput
-                id={'transactionIds'}
-                sizing={'sm'}
-                value={state.values.transactionIds}
-                onChange={(e) => onChangeValues('transactionIds', e.target.value)}
-                className={'w-full'}/>
+                id={'transactionIds'} sizing={'sm'} value={state.values.transactionIds}
+                onChange={(e) => onChangeValues('transactionIds', e.target.value)} className={'w-full'}
+              />
             </FormControlItem>
 
             <div className={'h-3'}></div>
