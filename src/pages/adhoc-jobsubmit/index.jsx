@@ -4,12 +4,15 @@ import { useLoginStore } from "../../core/states/login-store.jsx";
 import { useEffect } from "react";
 import { FormControlItem } from "../../components/form/control.jsx";
 import { useEnv } from "../../core/states/env-store.jsx";
+import { getBaseURL } from "../../core/api/api-values.jsx";
+import { useAlertDialog } from "../../components/dialogs/alert-dialog.jsx";
 
 export const AdhocJobSubmit = () => {
 
   const [state, setState] = useSetState({
     hasAccess: false,
     formType: '',
+    loading: false,
     errors: {
       queryIds: '',
       sessionIds: '',
@@ -44,8 +47,9 @@ export const AdhocJobSubmit = () => {
       stepId: '',
     }
   })
-  const {isLoggedIn} = useLoginStore()
+  const {isLoggedIn, loggedInAttributes, userRoles} = useLoginStore()
   const {env, appCode} = useEnv()
+  const { open , close } = useAlertDialog()
 
   useEffect(() => {
     checkAccess()
@@ -94,8 +98,127 @@ export const AdhocJobSubmit = () => {
 
   const submitForm = () => {
     if (validateForm()) {
-      console.log('Form submitted')
+      if (state.formType === 'snowFlake') {
+        callAPI({
+          env: env,
+          reqstr_id: loggedInAttributes,
+          process_type: "killSFQuery",
+          aplctn_cd: appCode,
+          user_role: userRoles || [],
+          etl_stp_parms: {
+            env: env,
+            aplctn_cd: appCode,
+            query_ids: JSON.parse(state.values.queryIds),
+            session_ids: JSON.parse(state.values.sessionIds),
+            transaction_ids: JSON.parse(state.values.transactionIds)
+          }
+        })
+      }
+
+      if (state.formType === 'deleteS3Files') {
+        callAPI({
+          env: env,
+          reqstr_id: loggedInAttributes,
+          process_type: "s3deletefiles",
+          aplctn_cd: appCode,
+          user_role: userRoles || [],
+          etl_stp_parms: {
+            bucket_name: state.values.bucketName,
+            bucket_key: state.values.keyName
+          }
+        })
+      }
+
+      if (state.formType === 'copyS3Files') {
+        callAPI({
+          env: env,
+          reqstr_id: loggedInAttributes,
+          process_type: "s3tos3copy",
+          aplctn_cd: appCode,
+          user_role: userRoles || [],
+          action: state.values.action,
+          etl_stp_parms: {
+            src_bkt: state.values.srcBucketName,
+            src_key: state.values.srcKeyName,
+            trgt_bkt: state.values.targetBucketName,
+            trgt_key: state.values.targetKeyName
+          }
+        })
+      }
+
+      if (state.formType === 'falconOperation') {
+        let input = {
+          env: env,
+          reqstr_id: loggedInAttributes,
+          process_type: "falconOperation",
+          aplctn_cd: appCode,
+          etl_stp_parms: {}
+        }
+
+        if (state.values.action === "checkConnectivity") {
+          input.action ='check-connectivity'
+          input.etl_stp_parms = {
+            hostname: JSON.parse(state.values.hostname.split(",")),
+            port: JSON.parse(state.values.port.split(",")),
+            cluster_id: JSON.parse(state.values.clusterId.split(","))
+          }
+        } else {
+          input.action = 'kill-falcon-job'
+          input.etl_stp_parms = {
+            falcon_stats_id: JSON.parse(state.values.falconStatsID.split(","))
+          }
+        }
+
+        callAPI(input)
+      }
+
+      if (state.formType === 'killEMR') {
+        let input = {
+          env: env,
+          reqstr_id: loggedInAttributes,
+          process_type: "EmrOperation",
+          aplctn_cd: appCode,
+          etl_stp_parms: {}
+        }
+
+        if (state.values.action === "killjob") {
+          input.action = 'killjob'
+          input.etl_stp_parms = {
+            cluster_id: JSON.parse(state.values.clusterId.split(","))
+          }
+        } else {
+          input.etl_stp_parms.Action='killstep'
+          input.etl_stp_parms = {
+            cluster_id: JSON.parse(state.values.clusterId.split(",")),
+            step_id: JSON.parse(state.values.stepId.split(","))
+          }
+        }
+
+        callAPI(input)
+      }
     }
+  }
+
+  const callAPI = (input) => {
+    setState({loading: true})
+    fetch(getBaseURL(env) + `jobrerun?env=${env}`, {
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify(input),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.text())
+      .then((result) => {
+        setState({loading: false})
+        open({title: 'Success', message: result })
+      })
+      .catch(err => {
+        setState({loading: false})
+        open({title: 'Error', message: 'Job Submission Failed'})
+      })
+
   }
 
 
@@ -208,46 +331,46 @@ export const AdhocJobSubmit = () => {
 
     if (state.formType === 'falconOperation') {
       // validate
-      if(state.values.action === 'killfalconStats') {
-        if(!state.values.falconStatsID || !state.values.falconStatsID.trim().length > 0) {
+      if (state.values.action === 'killfalconStats') {
+        if (!state.values.falconStatsID || !state.values.falconStatsID.trim().length > 0) {
           setState({errors: {falconStatsID: 'Falcon Stats ID is required'}})
           return false
         }
       }
 
-      if(state.values.action === 'checkConnectivity') {
-        if(!state.values.hostname || !state.values.hostname.trim().length > 0) {
+      if (state.values.action === 'checkConnectivity') {
+        if (!state.values.hostname || !state.values.hostname.trim().length > 0) {
           setState({errors: {hostname: 'Hostname is required'}})
           return false
         }
 
-        if(!state.values.port || !state.values.port.trim().length > 0) {
+        if (!state.values.port || !state.values.port.trim().length > 0) {
           setState({errors: {port: 'Port is required'}})
           return false
         }
 
-        if(!state.values.clusterId || !state.values.clusterId.trim().length > 0) {
+        if (!state.values.clusterId || !state.values.clusterId.trim().length > 0) {
           setState({errors: {clusterId: 'Cluster ID is required'}})
           return false
         }
       }
     }
 
-    if(state.formType === 'killEMR') {
-      if(state.values.action === 'killemrstep') {
-        if(!state.values.clusterId || !state.values.clusterId.trim().length > 0) {
+    if (state.formType === 'killEMR') {
+      if (state.values.action === 'killemrstep') {
+        if (!state.values.clusterId || !state.values.clusterId.trim().length > 0) {
           setState({errors: {clusterId: 'Cluster ID is required'}})
           return false
         }
 
-        if(!state.values.stepId || !state.values.stepId.trim().length > 0) {
+        if (!state.values.stepId || !state.values.stepId.trim().length > 0) {
           setState({errors: {stepId: 'Step ID is required'}})
           return false
         }
       }
 
-      if(state.values.action === 'killjob') {
-        if(!state.values.clusterId || !state.values.clusterId.trim().length > 0) {
+      if (state.values.action === 'killjob') {
+        if (!state.values.clusterId || !state.values.clusterId.trim().length > 0) {
           setState({errors: {clusterId: 'Cluster ID is required'}})
           return false
         }
@@ -305,7 +428,7 @@ export const AdhocJobSubmit = () => {
 
             <div className={'h-3'}></div>
             <div className={'flex justify-end space-x-3 mt-4'}>
-              <Button  size="xs" onClick={submitForm}>Submit</Button>
+              <Button size="xs" onClick={submitForm} disabled={state.loading}>Submit</Button>
               <Button color="gray" size="xs" onClick={resetForm}>Cancel</Button>
             </div>
           </div>
@@ -334,7 +457,7 @@ export const AdhocJobSubmit = () => {
 
             <div className={'h-3'}></div>
             <div className={'flex justify-end space-x-3 mt-4'}>
-              <Button  size="xs" onClick={submitForm}>Submit</Button>
+              <Button size="xs" onClick={submitForm} disabled={state.loading}>Submit</Button>
               <Button color="gray" size="xs" onClick={resetForm}>Cancel</Button>
             </div>
           </div>
@@ -382,7 +505,7 @@ export const AdhocJobSubmit = () => {
 
             <div className={'h-3'}></div>
             <div className={'flex justify-end space-x-3 mt-4'}>
-              <Button  size="xs" onClick={submitForm}>Submit</Button>
+              <Button size="xs" onClick={submitForm} disabled={state.loading}>Submit</Button>
               <Button color="gray" size="xs" onClick={resetForm}>Cancel</Button>
             </div>
           </div>
@@ -438,7 +561,7 @@ export const AdhocJobSubmit = () => {
 
             <div className={'h-3'}></div>
             <div className={'flex justify-end space-x-3 mt-4'}>
-              <Button  size="xs" onClick={submitForm}>Submit</Button>
+              <Button size="xs" onClick={submitForm} disabled={state.loading}>Submit</Button>
               <Button color="gray" size="xs" onClick={resetForm}>Cancel</Button>
             </div>
           </div>
@@ -488,7 +611,7 @@ export const AdhocJobSubmit = () => {
 
             <div className={'h-3'}></div>
             <div className={'flex justify-end space-x-3 mt-4'}>
-              <Button  size="xs" onClick={submitForm}>Submit</Button>
+              <Button size="xs" onClick={submitForm} disabled={state.loading}>Submit</Button>
               <Button color="gray" size="xs" onClick={resetForm}>Cancel</Button>
             </div>
           </div>

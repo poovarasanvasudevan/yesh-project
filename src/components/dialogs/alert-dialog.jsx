@@ -19,3 +19,19 @@ export const AlertDialog = ({message, title, name}) => {
     </DialogSkeleton>
   )
 }
+
+
+export const useAlertDialog = () => {
+  const {open: OpenDialog, close } = useModal();
+
+  return {
+    open: ({message, title}) => {
+      OpenDialog('alert-dialog', {
+        content: <AlertDialog message={message} title={title} name={'alert-dialog'}/>
+      })
+    },
+    close: () => {
+      close('alert-dialog')
+    }
+  }
+}
