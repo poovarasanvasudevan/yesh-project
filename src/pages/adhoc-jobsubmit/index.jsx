@@ -49,7 +49,7 @@ export const AdhocJobSubmit = () => {
   })
   const {isLoggedIn, loggedInAttributes, userRoles} = useLoginStore()
   const {env, appCode} = useEnv()
-  const {open, close} = useAlertDialog()
+  const {open} = useAlertDialog()
 
   useEffect(() => {
     checkAccess()
@@ -208,8 +208,7 @@ export const AdhocJobSubmit = () => {
       headers: {
         'Content-Type': 'application/json'
       }
-    })
-      .then(res => res.text())
+    }).then(res => res.text())
       .then((result) => {
         setState({loading: false})
         open({title: 'Success', message: result})
