@@ -36,8 +36,8 @@ export default function AppSidebar() {
         {label: "Unload Audit"},
         {label: "Stream Audit"},
         {label: "Adhoc Support", href: "/adhoc-support"},
-        {label: "CFX Audit"},
-        {label: "FFX Audit"},
+        {label: "CFX Audit", href: '/cfx-audit'},
+        {label: "FFX Audit", href: '/ffz-audit'},
       ],
     },
     {

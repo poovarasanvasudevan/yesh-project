@@ -29,6 +29,7 @@ export const AdhocJobSubmit = () => {
   }, [])
 
   const menus = [
+    {id: '', label: ''},
     {id: 'snowFlake', label: 'Kill Snowflake Query'},
     {id: 'deleteS3Files', label: 'Delete S3 Files'},
     {id: 'killEMR', label: 'EMR Operation'},
@@ -72,30 +73,30 @@ export const AdhocJobSubmit = () => {
 
         <div className={'h-6'}></div>
         {state.formType === 'snowFlake' && (
-          <div className={'flex flex-col space-y-2'}>
+          <div className={'flex flex-col space-y-2 w-[600px]'}>
             <FormControlItem label={'Application Code'} id={'appcode'}>
-              <TextInput id={'appcode'} required sizing={'sm'} value={appCode} disabled className={'w-[500px]'}/>
+              <TextInput id={'appcode'} required sizing={'sm'} value={appCode} disabled className={'w-full'}/>
             </FormControlItem>
 
             <FormControlItem label={'Environment'} id={'env'}>
-              <TextInput id={'env'} required sizing={'sm'} value={env} disabled className={'w-[500px]'}/>
+              <TextInput id={'env'} required sizing={'sm'} value={env} disabled className={'w-full'}/>
             </FormControlItem>
 
 
             <FormControlItem label={'Query IDS'} id={'queryIds'} error={state.errors.queryIds}>
               <TextInput id={'queryIds'} required sizing={'sm'} value={state.values.queryIds}
                          onChange={(e) => onChangeValues('queryIds', e.target.value)}
-                         className={'w-[500px]'}/>
+                         className={'w-full'}/>
             </FormControlItem>
             <FormControlItem label={'Session IDS'} id={'sessionIds'} error={state.errors.sessionIds}>
               <TextInput id={'sessionIds'} required sizing={'sm'} value={state.values.sessionIds}
                          onChange={(e) => onChangeValues('sessionIds', e.target.value)}
-                         className={'w-[500px]'}/>
+                         className={'w-full'}/>
             </FormControlItem>
             <FormControlItem label={'Transaction IDS'} id={'transactionIds'} error={state.errors.transactionIds}>
               <TextInput id={'transactionIds'} required sizing={'sm'} value={state.values.transactionIds}
                          onChange={(e) => onChangeValues('transactionIds', e.target.value)}
-                         className={'w-[500px]'}/>
+                         className={'w-full'}/>
             </FormControlItem>
 
             <div className={'h-3'}></div>

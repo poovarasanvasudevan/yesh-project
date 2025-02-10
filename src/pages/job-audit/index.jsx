@@ -95,7 +95,7 @@ const JobAudit = () => {
   ];
 
   const callAPI = async (env, appCode, dateFilter = undefined) => {
-    //  setState({loading: true})
+    setState({loading: true})
     const data = await fetch(getBaseURL(env) + `getauditdetails?env=${env}&app_cd=${appCode}&queryType=jobAudt${dateFilter ? `&dt_fltr=${dateFilter}` : ''}`).then(x => x.json())
     setState({result: [...data, state.result], loading: false})
   }

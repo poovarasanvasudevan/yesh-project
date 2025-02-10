@@ -5,6 +5,8 @@ import AdhocUpdate from "../pages/adhoc-update/index.jsx";
 import OrchestratorAudit from "../pages/orchestrator-audit/index.jsx";
 import AdhocSupport from "../pages/adhoc-support/index.jsx";
 import { AdhocJobSubmit } from "../pages/adhoc-jobsubmit/index.jsx";
+import { CFXAudit } from "../pages/Auditing/CFXAudit.jsx";
+import { FFZAudit } from "../pages/Auditing/FFZAudit.jsx";
 
 
 const AppRouter = () => {
@@ -12,34 +14,40 @@ const AppRouter = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <DashboardLayout />,
+      element: <DashboardLayout/>,
       children: [
         {
           path: "",
-          element: <JobAudit />,
+          element: <JobAudit/>,
         },
         {
           path: "adhoc-update",
-          element: <AdhocUpdate />,
+          element: <AdhocUpdate/>,
         },
         {
           path: "orchestrator-audit",
-          element: <OrchestratorAudit />,
+          element: <OrchestratorAudit/>,
         },
         {
           path: "adhoc-support",
-          element: <AdhocSupport />,
+          element: <AdhocSupport/>,
         },
         {
           path: "adhoc-jobsubmit",
-          element: <AdhocJobSubmit />
+          element: <AdhocJobSubmit/>
+        }, {
+          path: "cfx-audit",
+          element: <CFXAudit/>
+        },{
+          path: "ffz-audit",
+          element: <FFZAudit/>
         }
       ],
     },
   ]);
 
   return (
-    <RouterProvider router={ router } />
+    <RouterProvider router={router}/>
   )
 }
 
