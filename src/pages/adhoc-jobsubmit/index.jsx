@@ -1,4 +1,4 @@
-import { Alert, Select, TextInput } from "flowbite-react";
+import { Alert, Button, Select, TextInput } from "flowbite-react";
 import { useSetState } from "ahooks";
 import { useLoginStore } from "../../core/states/login-store.jsx";
 import { useEffect } from "react";
@@ -14,10 +14,15 @@ export const AdhocJobSubmit = () => {
       queryIds: '',
       sessionIds: '',
       transactionIds: '',
+    },
+    values: {
+      queryIds: '',
+      sessionIds: '',
+      transactionIds: '',
     }
   })
-  const { isLoggedIn } = useLoginStore()
-  const { env, appCode} = useEnv()
+  const {isLoggedIn} = useLoginStore()
+  const {env, appCode} = useEnv()
 
   useEffect(() => {
     checkAccess()
@@ -33,12 +38,16 @@ export const AdhocJobSubmit = () => {
 
   const checkAccess = () => {
     if (isLoggedIn) {
-      setState({ hasAccess: true })
+      setState({hasAccess: true})
     }
   }
 
   const onChangeFormType = (e) => {
-    setState({ formType: e.target.value })
+    setState({formType: e.target.value})
+  }
+
+  const onChangeValues = (id, value) => {
+    setState({values: {...state.values, [id]: value}})
   }
 
   return (
@@ -58,19 +67,42 @@ export const AdhocJobSubmit = () => {
         {isLoggedIn ? (
           <div className={'text-[14px] pt-4'}>You are not logged in. Please login to Perform updates.</div>
         ) : (
-          <Alert color={'gray'} className={'mt-2'}>*Note: You should be a part of Admin Group  in order to perform Adhoc Job Submission</Alert>
+          <Alert color={'gray'} className={'mt-2'}>*Note: You should be a part of Admin Group in order to perform Adhoc Job Submission</Alert>
         )}
 
         <div className={'h-6'}></div>
         {state.formType === 'snowFlake' && (
           <div className={'flex flex-col space-y-2'}>
             <FormControlItem label={'Application Code'} id={'appcode'}>
-              <TextInput id={'appcode'} required sizing={'sm'} value={appCode} disabled className={'w-[500px]'} />
+              <TextInput id={'appcode'} required sizing={'sm'} value={appCode} disabled className={'w-[500px]'}/>
             </FormControlItem>
 
             <FormControlItem label={'Environment'} id={'env'}>
-              <TextInput id={'env'} required sizing={'sm'} value={env} disabled className={'w-[500px]'} />
+              <TextInput id={'env'} required sizing={'sm'} value={env} disabled className={'w-[500px]'}/>
             </FormControlItem>
+
+
+            <FormControlItem label={'Query IDS'} id={'queryIds'} error={state.errors.queryIds}>
+              <TextInput id={'queryIds'} required sizing={'sm'} value={state.values.queryIds}
+                         onChange={(e) => onChangeValues('queryIds', e.target.value)}
+                         className={'w-[500px]'}/>
+            </FormControlItem>
+            <FormControlItem label={'Session IDS'} id={'sessionIds'} error={state.errors.sessionIds}>
+              <TextInput id={'sessionIds'} required sizing={'sm'} value={state.values.sessionIds}
+                         onChange={(e) => onChangeValues('sessionIds', e.target.value)}
+                         className={'w-[500px]'}/>
+            </FormControlItem>
+            <FormControlItem label={'Transaction IDS'} id={'transactionIds'} error={state.errors.transactionIds}>
+              <TextInput id={'transactionIds'} required sizing={'sm'} value={state.values.transactionIds}
+                         onChange={(e) => onChangeValues('transactionIds', e.target.value)}
+                         className={'w-[500px]'}/>
+            </FormControlItem>
+
+            <div className={'h-3'}></div>
+            <div className={'flex justify-end space-x-3 mt-4'}>
+              <Button color="blue" size="xs">Submit</Button>
+              <Button color="gray" size="xs">Cancel</Button>
+            </div>
           </div>
         )}
 
