@@ -20,7 +20,7 @@ const OrchestratorAudit = () => {
         </div>
       </div>
 
-      <div className={'flex-1 flex w-full'} >
+      <div className={'flex-1 flex w-full px-4'} >
         <Tabs  aria-label="Default tabs"  variant="underline" className={'w-full'}>
           <Tabs.Item title={'Orchestrator Audit'}><b>First</b> tab panel</Tabs.Item>
           <Tabs.Item title={'Batch Orchestrator Audit'}><b>First</b> tab panel</Tabs.Item>
