@@ -14,24 +14,34 @@ export const AdhocJobSubmit = () => {
       queryIds: '',
       sessionIds: '',
       transactionIds: '',
-      bucketName:'',
-      keyName:'',
-      srcBucketName:'',
-      srcKeyName:'',
-      targetBucketName:'',
-      targetKeyName:'',
+      bucketName: '',
+      keyName: '',
+      srcBucketName: '',
+      srcKeyName: '',
+      targetBucketName: '',
+      targetKeyName: '',
+      falconStatsID: '',
+      hostname: '',
+      port: '',
+      clusterId: '',
+      stepId: '',
     },
     values: {
       queryIds: '',
       sessionIds: '',
       transactionIds: '',
-      bucketName:'',
-      keyName:'',
-      srcBucketName:'',
-      srcKeyName:'',
-      targetBucketName:'',
-      targetKeyName:'',
-      action: 'copy'
+      bucketName: '',
+      keyName: '',
+      srcBucketName: '',
+      srcKeyName: '',
+      targetBucketName: '',
+      targetKeyName: '',
+      action: 'copy',
+      falconStatsID: '',
+      hostname: '',
+      port: '',
+      clusterId: '',
+      stepId: '',
     }
   })
   const {isLoggedIn} = useLoginStore()
@@ -69,8 +79,7 @@ export const AdhocJobSubmit = () => {
     try {
       JSON.parse(value)
       return true
-    }
-    catch (e) {
+    } catch (e) {
       return false
     }
   }
@@ -78,18 +87,16 @@ export const AdhocJobSubmit = () => {
   const isEmptyJSON = (value) => {
     try {
       return JSON.parse(value).length === 0
-    }
-    catch (e) {
+    } catch (e) {
       return false
     }
   }
 
   const submitForm = () => {
-    if(validateForm()) {
+    if (validateForm()) {
       console.log('Form submitted')
     }
   }
-
 
 
   const resetForm = () => {
@@ -98,24 +105,33 @@ export const AdhocJobSubmit = () => {
         queryIds: '',
         sessionIds: '',
         transactionIds: '',
-        bucketName:'',
-        keyName:'',
-        srcBucketName:'',
-        srcKeyName:'',
-        targetBucketName:'',
-        targetKeyName:'',
+        bucketName: '',
+        keyName: '',
+        srcBucketName: '',
+        srcKeyName: '',
+        targetBucketName: '',
+        targetKeyName: '',
+        falconStatsID: '',
+        hostname: '',
+        port: '',
+        clusterId: ''
+
       },
       values: {
         queryIds: '',
         sessionIds: '',
         transactionIds: '',
-        bucketName:'',
-        keyName:'',
-        srcBucketName:'',
-        srcKeyName:'',
-        targetBucketName:'',
-        targetKeyName:'',
-        action: 'copy'
+        bucketName: '',
+        keyName: '',
+        srcBucketName: '',
+        srcKeyName: '',
+        targetBucketName: '',
+        targetKeyName: '',
+        action: 'copy',
+        falconStatsID: '',
+        hostname: '',
+        port: '',
+        clusterId: ''
       }
     })
   }
@@ -126,17 +142,20 @@ export const AdhocJobSubmit = () => {
         queryIds: '',
         sessionIds: '',
         transactionIds: '',
-        bucketName:'',
-        keyName:'',
-        srcBucketName:'',
-        srcKeyName:'',
-        targetBucketName:'',
-        targetKeyName:'',
+        bucketName: '',
+        keyName: '',
+        srcBucketName: '',
+        srcKeyName: '',
+        targetBucketName: '',
+        targetKeyName: '',
+        falconStatsID: '',
+        hostname: '',
+        port: '',
+        clusterId: ''
       }
     })
 
-
-    if(state.formType === 'snowFlake') {
+    if (state.formType === 'snowFlake') {
       if (!state.values.queryIds || !isJSONValid(state.values.queryIds) || isEmptyJSON(state.values.queryIds)) {
         setState({errors: {queryIds: 'Invalid Query ID'}})
         return false
@@ -153,7 +172,7 @@ export const AdhocJobSubmit = () => {
       }
     }
 
-    if(state.formType === 'deleteS3Files') {
+    if (state.formType === 'deleteS3Files') {
       if (!state.values.bucketName || !state.values.bucketName.trim().length > 0) {
         setState({errors: {bucketName: 'Bucket Name is required'}})
         return false
@@ -165,7 +184,7 @@ export const AdhocJobSubmit = () => {
       }
     }
 
-    if(state.formType === 'copyS3Files') {
+    if (state.formType === 'copyS3Files') {
       if (!state.values.srcBucketName || !state.values.srcBucketName.trim().length > 0) {
         setState({errors: {srcBucketName: 'Source Bucket Name is required'}})
         return false
@@ -184,6 +203,54 @@ export const AdhocJobSubmit = () => {
       if (!state.values.targetKeyName || !state.values.targetKeyName.trim().length > 0) {
         setState({errors: {targetKeyName: 'Target Key Name is required'}})
         return false
+      }
+    }
+
+    if (state.formType === 'falconOperation') {
+      // validate
+      if(state.values.action === 'killfalconStats') {
+        if(!state.values.falconStatsID || !state.values.falconStatsID.trim().length > 0) {
+          setState({errors: {falconStatsID: 'Falcon Stats ID is required'}})
+          return false
+        }
+      }
+
+      if(state.values.action === 'checkConnectivity') {
+        if(!state.values.hostname || !state.values.hostname.trim().length > 0) {
+          setState({errors: {hostname: 'Hostname is required'}})
+          return false
+        }
+
+        if(!state.values.port || !state.values.port.trim().length > 0) {
+          setState({errors: {port: 'Port is required'}})
+          return false
+        }
+
+        if(!state.values.clusterId || !state.values.clusterId.trim().length > 0) {
+          setState({errors: {clusterId: 'Cluster ID is required'}})
+          return false
+        }
+      }
+    }
+
+    if(state.formType === 'killEMR') {
+      if(state.values.action === 'killemrstep') {
+        if(!state.values.clusterId || !state.values.clusterId.trim().length > 0) {
+          setState({errors: {clusterId: 'Cluster ID is required'}})
+          return false
+        }
+
+        if(!state.values.stepId || !state.values.stepId.trim().length > 0) {
+          setState({errors: {stepId: 'Step ID is required'}})
+          return false
+        }
+      }
+
+      if(state.values.action === 'killjob') {
+        if(!state.values.clusterId || !state.values.clusterId.trim().length > 0) {
+          setState({errors: {clusterId: 'Cluster ID is required'}})
+          return false
+        }
       }
     }
   }
@@ -231,14 +298,14 @@ export const AdhocJobSubmit = () => {
                          className={'w-full'}/>
             </FormControlItem>
             <FormControlItem required label={'Transaction IDS'} id={'transactionIds'} error={state.errors.transactionIds}>
-              <TextInput id={'transactionIds'}  sizing={'sm'} value={state.values.transactionIds}
+              <TextInput id={'transactionIds'} sizing={'sm'} value={state.values.transactionIds}
                          onChange={(e) => onChangeValues('transactionIds', e.target.value)}
                          className={'w-full'}/>
             </FormControlItem>
 
             <div className={'h-3'}></div>
             <div className={'flex justify-end space-x-3 mt-4'}>
-              <Button color="blue" size="xs" onClick={submitForm}>Submit</Button>
+              <Button  size="xs" onClick={submitForm}>Submit</Button>
               <Button color="gray" size="xs" onClick={resetForm}>Cancel</Button>
             </div>
           </div>
@@ -267,7 +334,7 @@ export const AdhocJobSubmit = () => {
 
             <div className={'h-3'}></div>
             <div className={'flex justify-end space-x-3 mt-4'}>
-              <Button color="blue" size="xs" onClick={submitForm}>Submit</Button>
+              <Button  size="xs" onClick={submitForm}>Submit</Button>
               <Button color="gray" size="xs" onClick={resetForm}>Cancel</Button>
             </div>
           </div>
@@ -283,7 +350,7 @@ export const AdhocJobSubmit = () => {
             </FormControlItem>
 
             <FormControlItem label={'Action'} id={'env'}>
-              <Select id={'action'} required sizing={'sm'} value={state.action}  className={'w-full'}>
+              <Select id={'action'} required sizing={'sm'} value={state.action} className={'w-full'}>
                 <option value={'copy'}>Copy</option>
                 <option value={'move'}>Move</option>
               </Select>
@@ -315,7 +382,113 @@ export const AdhocJobSubmit = () => {
 
             <div className={'h-3'}></div>
             <div className={'flex justify-end space-x-3 mt-4'}>
-              <Button color="blue" size="xs" onClick={submitForm}>Submit</Button>
+              <Button  size="xs" onClick={submitForm}>Submit</Button>
+              <Button color="gray" size="xs" onClick={resetForm}>Cancel</Button>
+            </div>
+          </div>
+        )}
+
+        {state.formType === 'falconOperation' && (
+          <div className={'flex flex-col space-y-2 w-[600px]'}>
+            <FormControlItem label={'Application Code'} id={'appcode'}>
+              <TextInput id={'appcode'} required sizing={'sm'} value={appCode} disabled className={'w-full'}/>
+            </FormControlItem>
+
+            <FormControlItem label={'Environment'} id={'env'}>
+              <TextInput id={'env'} required sizing={'sm'} value={env} disabled className={'w-full'}/>
+            </FormControlItem>
+
+            <FormControlItem label={'Action'} id={'env'}>
+              <Select id={'action'} required sizing={'sm'} value={state.action} className={'w-full'} onChange={(e) => onChangeValues('action', e.target.value)}>
+                <option value={''}></option>
+                <option value={'killfalconStats'}>Kill Falcon Job</option>
+                <option value={'checkConnectivity'}>Check Connectivity</option>
+              </Select>
+            </FormControlItem>
+
+            {state.values.action === 'checkConnectivity' && (
+              <>
+                <FormControlItem required label={'Hostname'} id={'hostname'} error={state.errors.hostname}>
+                  <TextInput id={'hostname'} required sizing={'sm'} value={state.values.hostname}
+                             onChange={(e) => onChangeValues('hostname', e.target.value)}
+                             className={'w-full'}/>
+                </FormControlItem>
+
+                <FormControlItem required label={'Port'} id={'port'} error={state.errors.port}>
+                  <TextInput id={'port'} required sizing={'sm'} value={state.values.port}
+                             onChange={(e) => onChangeValues('port', e.target.value)}
+                             className={'w-full'}/>
+                </FormControlItem>
+
+                <FormControlItem required label={'Cluster ID'} id={'clusterId'} error={state.errors.clusterId}>
+                  <TextInput id={'clusterId'} required sizing={'sm'} value={state.values.clusterId}
+                             onChange={(e) => onChangeValues('clusterId', e.target.value)}
+                             className={'w-full'}/>
+                </FormControlItem>
+              </>
+            )}
+            {state.values.action === 'killfalconStats' && (
+              <FormControlItem required label={'Falcon stats ID'} id={'falconStatsID'} error={state.errors.falconStatsID}>
+                <TextInput id={'falconStatsID'} required sizing={'sm'} value={state.values.falconStatsID}
+                           onChange={(e) => onChangeValues('falconStatsID', e.target.value)}
+                           className={'w-full'}/>
+              </FormControlItem>
+            )}
+
+
+            <div className={'h-3'}></div>
+            <div className={'flex justify-end space-x-3 mt-4'}>
+              <Button  size="xs" onClick={submitForm}>Submit</Button>
+              <Button color="gray" size="xs" onClick={resetForm}>Cancel</Button>
+            </div>
+          </div>
+        )}
+
+        {state.formType === 'killEMR' && (
+          <div className={'flex flex-col space-y-2 w-[600px]'}>
+            <FormControlItem label={'Application Code'} id={'appcode'}>
+              <TextInput id={'appcode'} required sizing={'sm'} value={appCode} disabled className={'w-full'}/>
+            </FormControlItem>
+
+            <FormControlItem label={'Environment'} id={'env'}>
+              <TextInput id={'env'} required sizing={'sm'} value={env} disabled className={'w-full'}/>
+            </FormControlItem>
+
+            <FormControlItem label={'Action'} id={'env'}>
+              <Select id={'action'} required sizing={'sm'} value={state.action} className={'w-full'} onChange={(e) => onChangeValues('action', e.target.value)}>
+                <option value={''}></option>
+                <option value={'killjob'}>Kill EMR Cluster</option>
+                <option value={'killemrstep'}>Kill EMR Step</option>
+              </Select>
+            </FormControlItem>
+
+            {state.values.action === 'killemrstep' && (
+              <>
+                <FormControlItem required label={'Cluster ID'} id={'clusterId'} error={state.errors.clusterId}>
+                  <TextInput id={'clusterId'} required sizing={'sm'} value={state.values.clusterId}
+                             onChange={(e) => onChangeValues('clusterId', e.target.value)}
+                             className={'w-full'}/>
+                </FormControlItem>
+
+                <FormControlItem required label={'StepId'} id={'stepId'} error={state.errors.stepId}>
+                  <TextInput id={'stepId'} required sizing={'sm'} value={state.values.stepId}
+                             onChange={(e) => onChangeValues('stepId', e.target.value)}
+                             className={'w-full'}/>
+                </FormControlItem>
+              </>
+            )}
+            {state.values.action === 'killjob' && (
+              <FormControlItem required label={'Cluster ID'} id={'clusterId'} error={state.errors.clusterId}>
+                <TextInput id={'clusterId'} required sizing={'sm'} value={state.values.clusterId}
+                           onChange={(e) => onChangeValues('clusterId', e.target.value)}
+                           className={'w-full'}/>
+              </FormControlItem>
+            )}
+
+
+            <div className={'h-3'}></div>
+            <div className={'flex justify-end space-x-3 mt-4'}>
+              <Button  size="xs" onClick={submitForm}>Submit</Button>
               <Button color="gray" size="xs" onClick={resetForm}>Cancel</Button>
             </div>
           </div>

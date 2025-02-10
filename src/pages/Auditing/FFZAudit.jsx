@@ -112,7 +112,7 @@ export const FFZAudit = () => {
           </div>
         </div>
       </div>
-      <div className={'flex-1 flex w-[100%] overflow-y-auto'}>
+      <div className={'flex-1 flex w-[100%] px-4 overflow-y-auto'}>
         <DatatableComponent loading={state.loading} rows={state.result} columns={columns}/>
       </div>
     </>

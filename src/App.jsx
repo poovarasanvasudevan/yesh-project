@@ -17,7 +17,7 @@ function App() {
     tabs: {
       tablist: {
         tabitem: {
-          base: 'px-4 py-1 text-[13px]'
+          base: 'px-4 py-1.5 text-[13px]'
         }
       }
 
