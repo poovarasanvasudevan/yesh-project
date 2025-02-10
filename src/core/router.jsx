@@ -4,6 +4,7 @@ import JobAudit from "../pages/job-audit/index.jsx";
 import AdhocUpdate from "../pages/adhoc-update/index.jsx";
 import OrchestratorAudit from "../pages/orchestrator-audit/index.jsx";
 import AdhocSupport from "../pages/adhoc-support/index.jsx";
+import { AdhocJobSubmit } from "../pages/adhoc-jobsubmit/index.jsx";
 
 
 const AppRouter = () => {
@@ -29,6 +30,10 @@ const AppRouter = () => {
           path: "adhoc-support",
           element: <AdhocSupport />,
         },
+        {
+          path: "adhoc-jobsubmit",
+          element: <AdhocJobSubmit />
+        }
       ],
     },
   ]);

@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 :root {
-  --zoom-value: 0.85;
+  --zoom-value: 0.84;
 }
 
 body, html {
@@ -29,7 +29,7 @@ body, html {
 }
 /* css scrollbar style */
 ::-webkit-scrollbar {
-  width: 16px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {

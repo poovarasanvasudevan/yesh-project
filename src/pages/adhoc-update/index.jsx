@@ -8,7 +8,6 @@ import { useEnv } from "../../core/states/env-store.jsx";
 import { getBaseURL } from "../../core/api/api-values.jsx";
 import { DialogSkeleton } from "../../components/dialogs/dialog-skeleton.jsx";
 import { useModal } from "@saimin/react-modal-manager";
-import LoginModal from "../../components/dialogs/login-modal.jsx";
 import { AlertDialog } from "../../components/dialogs/alert-dialog.jsx";
 
 const AdhocUpdate = () => {
@@ -97,19 +96,19 @@ const AdhocUpdate = () => {
 
 
   const onColumnChange = (e, index) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     setState((prev) => {
       const columns = [...prev.columns];
-      columns[index] = { name, value };
+      columns[index] = { name: value };
       return { columns };
     });
   }
 
   const onColumnValueChanged = (e, index) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     setState((prev) => {
       const columns = [...prev.columns];
-      columns[index] = { name, value };
+      columns[index] = { value };
       return { columns };
     });
   }

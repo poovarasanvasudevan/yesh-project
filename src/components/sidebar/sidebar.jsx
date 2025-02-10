@@ -14,11 +14,11 @@ import { useEffect } from "react";
 
 export default function AppSidebar() {
   const {isLoggedIn, setLogout, appCodes, accessibleEnv} = useLoginStore();
-  const { appCode, setAppCode, setEnv, env} = useEnv();
-  const { open } = useModal();
+  const {appCode, setAppCode, setEnv, env} = useEnv();
+  const {open} = useModal();
 
-  const [state,setState]=  useSetState({
-    defaultAppCodes : []
+  const [state, setState] = useSetState({
+    defaultAppCodes: []
   })
 
   const preEnv = [
@@ -44,7 +44,7 @@ export default function AppSidebar() {
       label: "Adhoc Utilities",
       children: [
         {label: "Adhoc Update", href: "/adhoc-update"},
-        {label: "Adhoc Job Submit"},
+        {label: "Adhoc Job Submit", href: '/adhoc-jobsubmit'},
       ],
     },
   ];
@@ -62,13 +62,13 @@ export default function AppSidebar() {
       inner: "h-full overflow-y-auto overflow-x-hidden rounded bg-gray-50 px-3 py-4 dark:bg-gray-800 flex flex-col",
     },
     collapse: {
-      "list":"py-0"
+      "list": "py-0"
     }
   };
 
   const openLoginModal = () => {
     open('login-modal', {
-      content: <LoginModal name={'login-modal'} />
+      content: <LoginModal name={'login-modal'}/>
     });
   }
 
@@ -98,8 +98,8 @@ export default function AppSidebar() {
 
       <div className={'px-2 gap-2 flex flex-col'}>
         <FormControlItem label={'Select Environment'} id={'env'}>
-          <Select id={'env'} required sizing={'sm'} onChange={(e) =>  setEnv(e.target.value)} value={env}>
-            {accessibleEnv[appCode] !== undefined  ? accessibleEnv[appCode].map((val) => (
+          <Select id={'env'} required sizing={'sm'} onChange={(e) => setEnv(e.target.value)} value={env}>
+            {accessibleEnv[appCode] !== undefined ? accessibleEnv[appCode].map((val) => (
               <option value={val} key={val}>{val}</option>
             )) : preEnv.map((val) => (
               <option value={val.value} key={val.value}>{val.label}</option>
@@ -108,8 +108,8 @@ export default function AppSidebar() {
         </FormControlItem>
 
         <FormControlItem label={'App Code'} id={'appcode'}>
-          <Select id={'env'} required sizing={'sm'} value={appCode} onChange={(e) =>  setAppCode(e.target.value)}>
-            {appCodes.length !==0 ?appCodes.map((val) => (
+          <Select id={'env'} required sizing={'sm'} value={appCode} onChange={(e) => setAppCode(e.target.value)}>
+            {appCodes.length !== 0 ? appCodes.map((val) => (
               <option value={val} key={val}>{val}</option>
             )) : state.defaultAppCodes.map((val) => (
               <option value={val} key={val}>{val}</option>
@@ -127,7 +127,7 @@ export default function AppSidebar() {
                   label={item.label}
                   icon={() => <MdOutlineAssignment/>}>
                   {item.children.map((child) => (
-                    <Sidebar.Item key={child.label}  onClick={()=> onClickMenu(child)} className={'text-[14px] cursor-pointer'}>
+                    <Sidebar.Item key={child.label} onClick={() => onClickMenu(child)} className={'text-[14px] cursor-pointer'}>
                       {child.label}
                     </Sidebar.Item>
                   ))}
@@ -135,7 +135,7 @@ export default function AppSidebar() {
               );
             } else {
               return (
-                <Sidebar.Item key={item.label} href={item.href} onClick={()=> onClickMenu(item)} icon={MdOutlineAssignment}>
+                <Sidebar.Item key={item.label} href={item.href} onClick={() => onClickMenu(item)} icon={MdOutlineAssignment}>
                   {item.label}
                 </Sidebar.Item>
               );
@@ -151,9 +151,9 @@ export default function AppSidebar() {
       )}
 
       {!isLoggedIn && (
-      <div className={'mt-2'}>
-        <Button className={'w-full'} onClick={openLoginModal} size={'xs'}>Login</Button>
-      </div>
+        <div className={'mt-2'}>
+          <Button className={'w-full'} onClick={openLoginModal} size={'xs'}>Login</Button>
+        </div>
       )}
 
       {isLoggedIn && (
