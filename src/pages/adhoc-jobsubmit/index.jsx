@@ -49,7 +49,7 @@ export const AdhocJobSubmit = () => {
   })
   const {isLoggedIn, loggedInAttributes, userRoles} = useLoginStore()
   const {env, appCode} = useEnv()
-  const { open , close } = useAlertDialog()
+  const {open, close} = useAlertDialog()
 
   useEffect(() => {
     checkAccess()
@@ -156,7 +156,7 @@ export const AdhocJobSubmit = () => {
         }
 
         if (state.values.action === "checkConnectivity") {
-          input.action ='check-connectivity'
+          input.action = 'check-connectivity'
           input.etl_stp_parms = {
             hostname: JSON.parse(state.values.hostname.split(",")),
             port: JSON.parse(state.values.port.split(",")),
@@ -187,7 +187,7 @@ export const AdhocJobSubmit = () => {
             cluster_id: JSON.parse(state.values.clusterId.split(","))
           }
         } else {
-          input.etl_stp_parms.Action='killstep'
+          input.etl_stp_parms.Action = 'killstep'
           input.etl_stp_parms = {
             cluster_id: JSON.parse(state.values.clusterId.split(",")),
             step_id: JSON.parse(state.values.stepId.split(","))
@@ -212,7 +212,7 @@ export const AdhocJobSubmit = () => {
       .then(res => res.text())
       .then((result) => {
         setState({loading: false})
-        open({title: 'Success', message: result })
+        open({title: 'Success', message: result})
       })
       .catch(err => {
         setState({loading: false})
@@ -421,9 +421,12 @@ export const AdhocJobSubmit = () => {
                          className={'w-full'}/>
             </FormControlItem>
             <FormControlItem required label={'Transaction IDS'} id={'transactionIds'} error={state.errors.transactionIds}>
-              <TextInput id={'transactionIds'} sizing={'sm'} value={state.values.transactionIds}
-                         onChange={(e) => onChangeValues('transactionIds', e.target.value)}
-                         className={'w-full'}/>
+              <TextInput
+                id={'transactionIds'}
+                sizing={'sm'}
+                value={state.values.transactionIds}
+                onChange={(e) => onChangeValues('transactionIds', e.target.value)}
+                className={'w-full'}/>
             </FormControlItem>
 
             <div className={'h-3'}></div>
