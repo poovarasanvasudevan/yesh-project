@@ -91,9 +91,9 @@ export default function AppSidebar() {
   }
 
   return (
-    <Sidebar className={'w-[280px] flex flex-col h-[100%]'} theme={customThemeSidebar}>
+    <Sidebar className={'w-[265px] flex flex-col h-[100%]'} theme={customThemeSidebar}>
       <Sidebar.Logo href="#" img={logo} imgAlt="logo">
-        AEDL Support Portal.
+        <div className={'text-[17px]'}>AEDL Support Portal.</div>
       </Sidebar.Logo>
 
       <div className={'px-2 gap-2 flex flex-col'}>
