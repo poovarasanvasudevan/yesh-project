@@ -9,97 +9,105 @@ import { IoIosRefresh } from "react-icons/io";
 import { CommonFunc } from "../../core/utils.jsx";
 
 const JobAudit = () => {
+  const sampleRecords = [
+    {
+      "aplctn_cd": "CUST",
+      "job_id": "CUST_001",
+      "job_nm": "Customer Data Load",
+      "edl_run_id": "EDL_001",
+      "job_strt_tm_utc": "2021-10-01T01:00:00",
+      "job_end_tm_utc": "2021-10-01T01:10:00",
+      "processing_time": "10 mins",
+      "job_stts": "FAILED"
+
+    }
+  ]
 
   const {env, appCode} = useEnv()
-  const [state, setState] = useSetState({
-    result: [],
-    loading: false,
-  })
 
   const onClickMenu = (menu) => {
+    console.log(menu)
   }
 
 
-  const columns = [
-    {headerName: "hidden", field: "jobMetadata", width: 0, hide: true},
-    {
-      headerName: "Application Code",
-      field: "aplctn_cd",
-      cellStyle: {"text-align": "center"},
-      width: 200,
-      filterParams: {apply: true, newRowsAction: 'keep'}
-    },
-    {
-      headerName: "Job ID",
-      field: "job_id",
-      cellStyle: {"text-align": "center"},
-      width: 120,
-      cellRenderer: "viewRenderer",
-      filterParams: {apply: true, newRowsAction: 'keep'}
-    },
-    {
-      headerName: "Job Name",
-      field: "job_nm",
-      cellStyle: {"text-align": "center"},
-      width: 320,
-      filterParams: {apply: true, newRowsAction: 'keep'}
-    },
-    {
-      headerName: "EDL Run ID",
-      field: "edl_run_id",
-      cellStyle: {"text-align": "center"},
-      width: 320,
-      filterParams: {apply: true, newRowsAction: 'keep'}
-    },
-    {
-      headerName: "Job Start Time (EST)",
-      field: "job_strt_tm_utc",
-      cellStyle: {"text-align": "center"},
-      width: 240,
-      cellRenderer: (p) => {
-        return CommonFunc.convertTZ(p.value)
+  const [state, setState] = useSetState({
+    result: sampleRecords,
+    loading: false,
+    columns: [
+      {headerName: "hidden", field: "jobMetadata", width: 0, hide: true},
+      {
+        headerName: "Application Code",
+        field: "aplctn_cd",
+        width: 200,
+        filterParams: {apply: true, newRowsAction: 'keep'}
       },
-      filterParams: {apply: true, newRowsAction: 'keep'}
-    },
-    {
-      headerName: "Job End Time (EST)",
-      field: "job_end_tm_utc",
-      cellStyle: {"text-align": "center"},
-      width: 240,
-      cellRenderer: (p) => {
-        return CommonFunc.convertTZ(p.value)
+      {
+        headerName: "Job ID",
+        field: "job_id",
+        width: 120,
+        cellRenderer: "viewRenderer",
+        filterParams: {apply: true, newRowsAction: 'keep'}
       },
-      filterParams: {apply: true, newRowsAction: 'keep'}
-    },
-    {
-      headerName: "Processed Time",
-      field: "processing_time",
-      cellStyle: {"text-align": "center"},
-      width: 175,
-      filterParams: {apply: true, newRowsAction: 'keep'}
-    },
-    {
-      headerName: "Job Status",
-      field: "job_stts",
-      cellStyle: function (params) {
-        return CommonFunc.SetColor(params);
+      {
+        headerName: "Job Name",
+        field: "job_nm",
+        width: 320,
+        filterParams: {apply: true, newRowsAction: 'keep'}
       },
-      pinned: "right",
-      suppressMovable: true,
-      filterParams: {apply: true, newRowsAction: 'keep'}
-    },
-    {
-      flex: 1, field: "id", headerName: "Action",
-      cellRenderer: JobAuditAction,
-      cellRendererParams: {
-        onClickMenu: onClickMenu
+      {
+        headerName: "EDL Run ID",
+        field: "edl_run_id",
+        width: 320,
+        filterParams: {apply: true, newRowsAction: 'keep'}
       },
-      pinned: "right",
-      suppressMovable: false,
-      sorting: false,
-      filter: false,
-    },
-  ];
+      {
+        headerName: "Job Start Time (EST)",
+        field: "job_strt_tm_utc",
+        width: 240,
+        cellRenderer: (p) => {
+          return CommonFunc.convertTZ(p.value)
+        },
+        filterParams: {apply: true, newRowsAction: 'keep'}
+      },
+      {
+        headerName: "Job End Time (EST)",
+        field: "job_end_tm_utc",
+        width: 240,
+        cellRenderer: (p) => {
+          return CommonFunc.convertTZ(p.value)
+        },
+        filterParams: {apply: true, newRowsAction: 'keep'}
+      },
+      {
+        headerName: "Processed Time",
+        field: "processing_time",
+        width: 175,
+        filterParams: {apply: true, newRowsAction: 'keep'}
+      },
+      {
+        headerName: "Job Status",
+        field: "job_stts",
+        cellStyle: function (params) {
+          return CommonFunc.SetColor(params);
+        },
+        pinned: "right",
+        suppressMovable: true,
+        filterParams: {apply: true, newRowsAction: 'keep'}
+      },
+      {
+        flex: 1, field: "id", headerName: "Action",
+        cellRenderer: JobAuditAction,
+        cellRendererParams: {
+          onClick: onClickMenu
+        },
+        pinned: "right",
+        suppressMovable: true,
+        sorting: false,
+        filter: false,
+      },
+    ]
+  })
+
 
 
   const callAPI = async (env, appCode, dateFilter = undefined) => {
@@ -109,7 +117,7 @@ const JobAudit = () => {
   }
 
   useEffect(() => {
-    callAPI(env, appCode)
+    //callAPI(env, appCode)
   }, [env, appCode]);
 
   const loadMore = () => {
@@ -144,7 +152,10 @@ const JobAudit = () => {
         </div>
       </div>
       <div className={'flex-1 flex w-[100%]  px-4 overflow-y-auto'}>
-        <DatatableComponent loading={state.loading} rows={state.result} columns={columns}/>
+        <DatatableComponent
+          loading={state.loading}
+          rows={state.result}
+          columns={state.columns}/>
       </div>
     </>
   );

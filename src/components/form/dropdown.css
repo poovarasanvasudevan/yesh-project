@@ -20,14 +20,14 @@
     right:0;
     min-width: 160px;
     border-radius: 6px;
-
+    flex-direction: column;
     @apply py-1.5;
 }
 
 .dropdown-menu li {
-    padding: 6px 16px;
+    padding: 4px 16px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .dropdown-menu li:hover {

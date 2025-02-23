@@ -84,7 +84,7 @@ export const CFXAudit = () => {
     <>
       <div className={'flex p-4 items-center'}>
         <div className={'flex-1'}>
-          <h3 className={'font-semibold text-[18px]'}> Job Audit</h3>
+          <h3 className={'font-semibold text-[18px]'}> CFX Audit</h3>
         </div>
 
 

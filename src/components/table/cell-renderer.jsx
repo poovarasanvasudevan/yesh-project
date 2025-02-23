@@ -1,7 +1,7 @@
 import { Badge } from "flowbite-react";
 import Dropdown from "../form/dropdown.jsx";
 import { useLoginStore } from "../../core/states/login-store.jsx";
-
+import 'rsuite/Dropdown/styles/index.css';
 
 export const StatusRenderer = ({value}) => {
   return (
@@ -31,8 +31,15 @@ export const JobAuditAction = (params) => {
     options.push("Force Complete")
   }
 
-  const onClickMenu = ( menu ) => {
-    params.onClickMenu(menu)
+  const onClick = ( e ) => {
+    if (params.onClick instanceof Function) {
+      const retParams = {
+        event: "click",
+        rowData: params.node.data,
+        selection: e,
+      };
+      params.onClick(retParams);
+    }
   }
 
   return (
@@ -43,7 +50,7 @@ export const JobAuditAction = (params) => {
         "Re-Run",
         "Force Complete",
       ]}
-      onChange={onClickMenu}
+      onChange={onClick}
       render={
         <span className={'px-3 py-1 bg-blue-500 text-[11px] text-white rounded'}>Open Action</span>
       }
