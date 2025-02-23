@@ -61,5 +61,10 @@ export const CommonFunc = {
 
     const cTime = new Date(dateTime.replace(" ", "T") + ".000Z")
     return cTime.toLocaleString('en-US', { timeZone: "America/New_York" })
-  }
+  },
+
+  openInNewTab(url) {
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+    if (newWindow) newWindow.opener = null
+  },
 }

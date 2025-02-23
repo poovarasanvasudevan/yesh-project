@@ -7,6 +7,9 @@ import { JobAuditAction } from "../../components/table/cell-renderer.jsx";
 import { Button } from "flowbite-react";
 import { IoIosRefresh } from "react-icons/io";
 import { CommonFunc } from "../../core/utils.jsx";
+import { useLoginStore } from "../../core/states/login-store.jsx";
+import { render } from "react-dom";
+import LogInfo from "../../components/utils/log-info.jsx";
 
 const JobAudit = () => {
   const sampleRecords = [
@@ -24,9 +27,49 @@ const JobAudit = () => {
   ]
 
   const {env, appCode} = useEnv()
+  const { isLoggedIn } =useLoginStore()
 
-  const onClickMenu = (menu) => {
-    console.log(menu)
+  const onClickMenu = ({ selection, rowData }) => {
+    console.log(selection, rowData)
+    if(selection === 'Logs') {
+      showLogs(rowData)
+    }
+  }
+
+  const showLogs = ( row ) => {
+    if(isLoggedIn) {
+      let errorLog = row.err_log === undefined || row.err_log === null
+          ? row.err_log
+          : row.err_log.replace("#", "%23");
+      let api_url = getBaseURL(env) +
+        "geterrorloginfo?env=" +
+        env +
+        "&queryType=jobAudt&job_id=" +
+        row.job_id +
+        "&edl_run_id=" +
+        row.edl_run_id +
+        "&job_strt_tm=" +
+        row.job_strt_tm_utc +
+        "&job_end_tm=" +
+        row.job_end_tm_utc +
+        "&err_rsn_desc=" +
+        row.err_rsn_desc +
+        "&err_log=" +
+        errorLog;
+
+      row.page = "Job Audit";
+      row.api_url = api_url;
+      row.env = env;
+
+      let nextDiv = document.body.appendChild(document.createElement("div"));
+      nextDiv.setAttribute("id", "child-root" + this.state.tabCount);
+
+      console.log(nextDiv);
+
+      render(<LogInfo data={row} />,  document.getElementById("child-root"));
+    } else {
+      CommonFunc.openInNewTab(row.err_log);
+    }
   }
 
 
@@ -117,7 +160,7 @@ const JobAudit = () => {
   }
 
   useEffect(() => {
-    //callAPI(env, appCode)
+    callAPI(env, appCode)
   }, [env, appCode]);
 
   const loadMore = () => {

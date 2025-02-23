@@ -1,7 +1,6 @@
 import { Badge } from "flowbite-react";
 import Dropdown from "../form/dropdown.jsx";
 import { useLoginStore } from "../../core/states/login-store.jsx";
-import 'rsuite/Dropdown/styles/index.css';
 
 export const StatusRenderer = ({value}) => {
   return (
