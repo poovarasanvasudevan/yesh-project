@@ -4,9 +4,14 @@ import { useEnv } from "../../core/states/env-store.jsx";
 import { useEffect } from "react";
 import { useLoginStore } from "../../core/states/login-store.jsx";
 import { CommonFunc } from "../../core/utils.jsx";
+import { DialogSkeleton } from "./dialog-skeleton.jsx";
+import { FormControlItem } from "../form/control.jsx";
+import { Button, Checkbox, Label, Select, Textarea, TextInput } from "flowbite-react";
+import { useModal } from "@saimin/react-modal-manager";
 
-const RerunConfirmModal = ({rowData, screenName, handleStateUpdate}) => {
+const RerunConfirmModal = ({rowData, screenName, handleStateUpdate, name}) => {
   const {env} = useEnv()
+  const { close }= useModal()
   const {loggedInAttributes, userRoles} = useLoginStore();
   const [state, setState] = useSetState({
     show: false, job_id: '', etl_stp_nbr_lst: 'na', rerun_type: '', retry: '', edl_run_id: '', etl_sfn_parms: '{}', job_stts: '',
@@ -106,7 +111,7 @@ const RerunConfirmModal = ({rowData, screenName, handleStateUpdate}) => {
   }
 
   const handleClose = () => {
-    setState({show: false});
+   close( name )
   }
 
   const executeApi = (inputData) => {
@@ -200,10 +205,10 @@ const RerunConfirmModal = ({rowData, screenName, handleStateUpdate}) => {
       let etl_sfn_parms = {};
       let anthemId = sessionStorage.getItem('anthem_id');
 
-      reRunData.env = props.currentEnv;
+      reRunData.env = env;
       reRunData.aplctn_cd = state.aplctn_cd;
       reRunData.reqstr_id = anthemId;
-      reRunData.usr_role = props.userRoles;
+      reRunData.usr_role = userRoles;
       if (!state.is_process_type_req)
         reRunData.process_type = 'etl';
       else
@@ -247,7 +252,7 @@ const RerunConfirmModal = ({rowData, screenName, handleStateUpdate}) => {
       if (!state.process_type_etl && !state.process_type_ingest && state.is_process_type_req) {
         errors.process_type = 'Choose at least one processing type';
       }
-      setState(prevState => ({...prevState, errors}));
+      setState({errors: errors});
     }
   };
 
@@ -318,6 +323,97 @@ const RerunConfirmModal = ({rowData, screenName, handleStateUpdate}) => {
     return true;
   };
 
+  const footer = (
+    <div className={'flex justify-end space-x-4 px-6 py-4'}>
+      <Button disabled={state.disableRerunButton} size="xs" onClick={saveChanges}>{state.title}</Button>
+      <Button color="gray" size="xs" onClick={handleClose}>Cancel</Button>
+    </div>
+  )
+
+  return (
+    <DialogSkeleton className={'w-[600px]'} title={state.title} show={state.show} handleClose={handleClose} handleSave={saveChanges} footer={footer}>
+      <div className={'flex flex-col p-5 w-full'}>
+        {!['abandoned', 'reprocess'].some(v => state.screenName.includes(v)) &&
+          <div className={'w-full'}>
+            {state.is_process_type_req &&
+              <div className={'flex space-x-4'}>
+                <div className="flex items-center gap-2">
+                  <Checkbox id="process_type_etl" name="process_type_etl" color="secondary" checked={state.process_type_etl}
+                            disabled={state.enable_process_type}
+                            onChange={handleChange} label="ETL"/>
+                  <Label htmlFor={'process_type_etl'} className="text-sm text-gray-500">ETL</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox id="process_type_ingest" name="process_type_ingest" color="secondary" checked={state.process_type_ingest}
+                            disabled={state.enable_process_type}
+                            onChange={handleChange} label="Ingest"/>
+                  <Label htmlFor={'process_type_ingest'} className="text-sm text-gray-500">Ingest</Label>
+                </div>
+              </div>
+            }
+
+            <div className={'mt-3'}>
+              <FormControlItem label="Re-Run Type" id="rerun_type" error={state.errors.rerun_type}>
+                <Select id="rerun_type" name="rerun_type" value={state.rerun_type} onChange={handleChange}
+                        disabled={state.disableReRunType} sizing={'sm'}
+                        className={'w-full'}>
+                  <option value=""></option>
+                  {state.is_process_type_req ? <option value={'Failed'}>Re-run from point of failure</option>
+                    : <option value={'SelectedSteps'}>ReRun only selected steps for same execution</option>}
+                  <option value="New">Re-run as new execution</option>
+                  <option value="Reprocess">Reprocess</option>
+                </Select>
+              </FormControlItem>
+
+              <FormControlItem label="Job ID" id="job_id" error={state.errors.job_id} className={'mt-2'}>
+                <TextInput id="job_id" name="job_id" value={state.job_id} onChange={(e) => setState({job_id: e.target.value})} sizing={'sm'}/>
+              </FormControlItem>
+            </div>
+          </div>
+        }
+
+        <FormControlItem label="EDL Run ID" id="edl_run_id" error={state.errors.edl_run_id} className={'mt-2'}>
+          {['reprocess', 'abandoned'].includes(state.screenName) ?
+            <Textarea id="edl_run_id" name="edl_run_id" value={state.edl_run_id}
+                      disabled={true}
+                      onChange={(e) => setState({edl_run_id: e.target.value})} sizing={'sm'}/>
+            :
+            <TextInput id="edl_run_id" name="edl_run_id" value={state.edl_run_id.replaceAll(",", '\n')}
+                       onChange={(e) => setState({edl_run_id: e.target.value})} disabled={true}
+                       sizing={'sm'}/>
+          }
+        </FormControlItem>
+
+        {!['abandoned', 'reprocess'].some(v => state.screenName.includes(v)) &&
+          <div>
+            <FormControlItem label="Step Sequence No." id="etl_stp_nbr_lst" error={state.errors.etl_stp_nbr_lst} className={'mt-2'}>
+              <TextInput id="etl_stp_nbr_lst" name="etl_stp_nbr_lst" value={state.etl_stp_nbr_lst}
+                         disabled={true}
+                         onChange={(e) => setState({etl_stp_nbr_lst: e.target.value})} sizing={'sm'}/>
+            </FormControlItem>
+
+            <FormControlItem label={'etl_sfn_parms'} id={'etl_sfn_parms'} error={!isJson(state.etl_sfn_parms) ? 'Not Valid JSON' : ''} className={'mt-2'}>
+              <TextInput id={'etl_sfn_parms'} name={'etl_sfn_parms'} value={state.etl_sfn_parms}
+                         disabled={state.disableParams}
+                          onChange={(e) => setState({etl_sfn_parms: e.target.value})} sizing={'sm'}
+                         />
+            </FormControlItem>
+
+            <FormControlItem label="Retry" id="retry" error={state.errors.retry} className={'mt-2'}>
+              <Select id="retry" name="retry" value={state.retry} onChange={handleChange} disabled={state.disableRetry} sizing={'sm'}>
+                  <option value=""></option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+              </Select>
+            </FormControlItem>
+          </div>
+        }
+
+        {state.cfx && <div className={'text-red-500 font-semibold'}>Abandon jobs cannot be reprocessed for CFX Audit</div>}
+
+      </div>
+    </DialogSkeleton>
+  )
 
 }
 

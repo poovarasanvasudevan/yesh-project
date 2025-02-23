@@ -10,6 +10,8 @@ import { CommonFunc } from "../../core/utils.jsx";
 import { useLoginStore } from "../../core/states/login-store.jsx";
 import { render } from "react-dom";
 import LogInfo from "../../components/utils/log-info.jsx";
+import { useModal } from "@saimin/react-modal-manager";
+import RerunConfirmModal from "../../components/dialogs/rerun-confirm-modal.jsx";
 
 const JobAudit = () => {
   const sampleRecords = [
@@ -28,11 +30,18 @@ const JobAudit = () => {
 
   const {env, appCode} = useEnv()
   const { isLoggedIn } =useLoginStore()
+  const { open} = useModal()
 
   const onClickMenu = ({ selection, rowData }) => {
     console.log(selection, rowData)
     if(selection === 'Logs') {
       showLogs(rowData)
+    }
+    if(selection === 'Re-Run') {
+      open('Re-Run', {
+        content: <RerunConfirmModal rowData={rowData} handleStateUpdate={() =>{}} screenName={'re-run'} name={'Re-Run'} />,
+        hideOnClickBackDrop: false,
+      })
     }
   }
 
