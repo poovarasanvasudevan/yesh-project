@@ -67,4 +67,7 @@ export const CommonFunc = {
     const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
     if (newWindow) newWindow.opener = null
   },
+  validateForm(errors) {
+
+  }
 }

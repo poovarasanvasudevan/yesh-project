@@ -3,6 +3,7 @@ import { getBaseURL } from "../../core/api/api-values.jsx";
 import { useEnv } from "../../core/states/env-store.jsx";
 import { useEffect } from "react";
 import { useLoginStore } from "../../core/states/login-store.jsx";
+import { CommonFunc } from "../../core/utils.jsx";
 
 const RerunConfirmModal = ({rowData, screenName, handleStateUpdate}) => {
   const {env} = useEnv()
@@ -179,6 +180,144 @@ const RerunConfirmModal = ({rowData, screenName, handleStateUpdate}) => {
 
     executeApi(abandoneData);
   }
+
+
+  const validateAllInputs = () => {
+    if (!state.rerun_type || !state.job_id || !state.edl_run_id || !state.etl_stp_nbr_lst || !state.retry
+      || (!state.process_type_etl && !state.process_type_ingest && state.is_process_type_req)) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const rerunJob = () => {
+    if (CommonFunc.validateForm(state.errors) && validateAllInputs()) {
+      let reRunData = {};
+      let etl_stp_nbr_lst = {};
+      let edl_run_id_lst = {};
+      let etl_sfn_parms_lst = [];
+      let etl_sfn_parms = {};
+      let anthemId = sessionStorage.getItem('anthem_id');
+
+      reRunData.env = props.currentEnv;
+      reRunData.aplctn_cd = state.aplctn_cd;
+      reRunData.reqstr_id = anthemId;
+      reRunData.usr_role = props.userRoles;
+      if (!state.is_process_type_req)
+        reRunData.process_type = 'etl';
+      else
+        reRunData.process_type = state.process_type_etl ? 'etl' : 'ingest';
+
+      reRunData.etl_stp_parms = {
+        trgt_job_id_lst: state.job_id,
+        retry: state.retry,
+        etl_stp_nbr_lst: {},
+        edl_run_id_lst: {},
+        etl_sfn_parms_lst: [],
+      };
+      etl_stp_nbr_lst[state.job_id] = state.etl_stp_nbr_lst;
+      edl_run_id_lst[state.job_id] = state.edl_run_id;
+      etl_sfn_parms[state.job_id] = state.etl_sfn_parms;
+      etl_sfn_parms_lst.push(etl_sfn_parms);
+
+      reRunData.etl_stp_parms.etl_stp_nbr_lst = etl_stp_nbr_lst;
+      reRunData.etl_stp_parms.edl_run_id_lst = edl_run_id_lst;
+      reRunData.etl_stp_parms.etl_sfn_parms_lst = etl_sfn_parms_lst;
+
+      executeApi(reRunData);
+    } else {
+      let errors = state.errors;
+      if (!state.rerun_type) {
+        errors.rerun_type = 'Re-Run Type is required';
+      }
+      if (!state.retry) {
+        errors.retry = 'Retry is required';
+      }
+      if (!state.job_id) {
+        errors.job_id = 'Job ID is required';
+      }
+      if (!state.edl_run_id) {
+        errors.edl_run_id = 'EDL Run ID is required';
+      }
+
+      if (!state.etl_stp_nbr_lst) {
+        errors.etl_stp_nbr_lst = 'Step Sequence No. is required';
+      }
+      if (!state.process_type_etl && !state.process_type_ingest && state.is_process_type_req) {
+        errors.process_type = 'Choose at least one processing type';
+      }
+      setState(prevState => ({...prevState, errors}));
+    }
+  };
+
+  const saveChanges = () => {
+    if (state.screen_nm === 'abandoned') {
+      abandoneJob();
+    } else if (state.screen_nm === 'reprocess') {
+      reProcessJob();
+    } else {
+      rerunJob();
+    }
+  };
+
+
+  const handleChange = (event) => {
+    event.preventDefault();
+    const {name, value, checked} = event.target;
+    let errors = state.errors;
+
+    switch (name) {
+      case 'rerun_type':
+        setState(prevState => ({
+          edl_run_id: value === 'New' ? 'na' : state.failed_edl_run_id,
+          rerun_type: value,
+          errors: {...prevState.errors, rerun_type: value.length <= 0 ? 'Re-Run Type is required' : ''}
+        }))
+        break;
+      case 'retry':
+        setState(prevState => ({
+          retry: value,
+          errors: {...prevState.errors, retry: value.length <= 0 ? 'Retry is required' : ''}
+        }));
+        break;
+      case 'process_type_etl':
+        setState({
+          process_type_etl: checked,
+          process_type_ingest: false,
+          disableParams: false,
+          disableRetry: false,
+          edl_run_id: state.job_stts === 'SUCCEEDED' ? 'na' : state.edl_run_id,
+          disableReRunType: state.job_stts === 'SUCCEEDED',
+          rerun_type: state.job_stts === 'SUCCEEDED' ? 'New' : state.rerun_type,
+        });
+        break;
+      case 'process_type_ingest':
+        setState({
+          process_type_ingest: checked,
+          process_type_etl: false,
+          rerun_type: 'Reprocess',
+          disableReRunType: true,
+          disableParams: true,
+          disableRetry: true,
+          retry: "no",
+          edl_run_id: state.edl_run_id_ref,
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
+  const isJson = (str) => {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  };
+
 
 }
 
